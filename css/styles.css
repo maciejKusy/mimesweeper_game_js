@@ -1,0 +1,57 @@
+body {
+  background-color: bisque;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  height: 100%;
+  padding-top: 5vh;
+}
+
+h1 {
+  color: #4d4d4d;
+  font-family: "Press Start 2P", arial;
+  font-size: 2.5rem;
+}
+
+.tile-container {
+  background-color: #7e7e7e;
+  border: 2px outset #bfbfbf;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  margin-top: 5vh;
+  max-width: 90vw;
+}
+
+.tile-row {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+}
+
+.tile-unclicked {
+  background-color: #7e7e7e;
+  border: 2px outset #bfbfbf;
+  font-family: "Press Start 2P", arial;
+  height: 1.5rem;
+  width: 1.5rem;
+}
+/*# sourceMappingURL=styles.css.map */

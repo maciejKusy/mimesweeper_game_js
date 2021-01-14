@@ -1,0 +1,46 @@
+$backgroundColor: bisque;
+$tileColor: #7e7e7e;
+$tileBorderColor: #bfbfbf;
+$mainFontColor: #4d4d4d;
+$tileFont: 'Press Start 2P', arial;
+
+@mixin main-theme {
+    background-color: $tileColor;
+    border: 2px outset $tileBorderColor;
+}
+
+body {
+    background-color: $backgroundColor;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    padding-top: 5vh;
+}
+
+h1 {
+    color: $mainFontColor;
+    font-family: $tileFont;
+    font-size: 2.5rem;
+}
+
+.tile-container {
+    @include main-theme;
+    display: inline-flex;
+    flex-direction: column;
+    margin-top: 5vh;
+    max-width: 90vw;
+}
+
+.tile-row {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+}
+
+.tile-unclicked {
+    @include main-theme;
+    font-family: $tileFont;
+    height: 1.5rem;
+    width: 1.5rem;
+}
