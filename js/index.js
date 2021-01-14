@@ -8,8 +8,8 @@
     const createTileRows = (fieldHeight, fieldWidth) => {
         if (fieldHeight < 4) {fieldHeight = 4;}
         if (fieldWidth < 8) {fieldWidth = 8;}
-        if (fieldHeight > 20) {fieldHeight = 20;}
-        if (fieldWidth > 25) {fieldWidth = 25;}
+        if (fieldHeight > 16) {fieldHeight = 16;}
+        if (fieldWidth > 30) {fieldWidth = 30;}
 
         for (let height = 0; height < fieldHeight; height++) {
             let newRow = document.createElement("div");
@@ -31,11 +31,37 @@
         for (let width = 0; width < fieldWidth; width++) {
             let newTile = document.createElement("div");
             newTile.classList.add("tile-unclicked");
-            newTile.setAttribute("data-mime", false);
+            newTile.dataset.mime = false;
 
             tileRow.appendChild(newTile);
         }
     }
 
-    createTileRows(50, 30);
+    /**
+     * Randomly chooses tiles and if relevant, turns them into mime tiles. While loop until the number
+     * of mime tiles corresponds to the number provided to the function
+     * @param {number} numberOfMimes - how many mime tiles there should be on the playing field
+     */
+    const createMimes = numberOfMimes => {
+        let mimesleft;
+        const tileList = document.getElementsByClassName("tile-unclicked");
+
+        if (numberOfMimes > tileList.length) {mimesLeft = tileList.length;}
+        else {mimesLeft = numberOfMimes};
+        
+        while (mimesLeft > 0) {
+            let randomIndex = Math.floor(Math.random() * tileList.length);
+            let selectedTile = tileList.item(randomIndex)          
+
+            if (selectedTile.dataset.mime === "true") {continue;}
+            else {
+                selectedTile.dataset.mime = true;
+                mimesLeft--;
+            }
+        }        
+    }
+
+    createTileRows(40, 40);
+    createMimes(99)
+    
 })();
