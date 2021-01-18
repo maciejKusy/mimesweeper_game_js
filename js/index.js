@@ -66,11 +66,20 @@
         }        
     }
 
-    const checkIfMime = (node) => {
-        if (node.dataset.mime === "true") {return true;}
+    /**
+     * Check if the node(tile) at a given position withing the matrix is a mime tile;
+     * @param {NodeList} matrix - the list of all tile row divs;
+     * @param {number} rowIndex - the index of the row / vertical coordinate of the tile;
+     * @param {number} tileIndex - the index of the tile within the row / horizontal coordinate;
+     */
+    const checkIfMime = (matrix, rowIndex, tileIndex) => {
+        if (matrix[rowIndex].children[tileIndex].dataset.mime === "true") {return true;}
         return false;
     }
 
+    /**
+     * Create the indication, for every non-mime tile, of how many neighboring tiles are mimes;
+     */
     const createMimeNeighbors = () => {
         const rowList = document.getElementsByClassName("tile-row");
         const verticalLimit = height;
@@ -78,31 +87,31 @@
 
         for (let rowInd = 0; rowInd < verticalLimit; rowInd++) {            
             for (let tileInd = 0; tileInd < horizontalLimit; tileInd++) {
-                if (rowList[rowInd].children[tileInd].dataset.mime != "true") {   
+                if (!checkIfMime(rowList, rowInd, tileInd)) {
                     let mimeNeighbors = 0;
                     if ((tileInd - 1) >= 0) {
-                        if (checkIfMime(rowList[rowInd].children[tileInd - 1])) {mimeNeighbors++;}
+                        if (checkIfMime(rowList, rowInd, tileInd - 1)) {mimeNeighbors++;}
                     }
                     if ((tileInd + 1) < horizontalLimit) {
-                        if (checkIfMime(rowList[rowInd].children[tileInd + 1])) {mimeNeighbors++;}
+                        if (checkIfMime(rowList, rowInd, tileInd + 1)) {mimeNeighbors++;}
                     }
                     if ((rowInd - 1) >= 0) {
-                        if (checkIfMime(rowList[rowInd - 1].children[tileInd])) {mimeNeighbors++;}
+                        if (checkIfMime(rowList, rowInd - 1, tileInd)) {mimeNeighbors++;}
                     }
                     if ((rowInd + 1) < verticalLimit) {
-                        if (checkIfMime(rowList[rowInd + 1].children[tileInd])) {mimeNeighbors++;}
+                        if (checkIfMime(rowList, rowInd + 1, tileInd)) {mimeNeighbors++;}
                     }
                     if ((rowInd - 1) >= 0 && (tileInd - 1) >= 0) {
-                        if (checkIfMime(rowList[rowInd - 1].children[tileInd - 1])) {mimeNeighbors++;}
+                        if (checkIfMime(rowList, rowInd - 1, tileInd - 1)) {mimeNeighbors++;}
                     }
                     if ((rowInd + 1) < verticalLimit && (tileInd - 1) >= 0) {
-                        if (checkIfMime(rowList[rowInd + 1].children[tileInd - 1])) {mimeNeighbors++;}
+                        if (checkIfMime(rowList, rowInd + 1, tileInd - 1)) {mimeNeighbors++;}
                     }
                     if ((rowInd - 1) >= 0 && (tileInd + 1) < horizontalLimit) {
-                        if (checkIfMime(rowList[rowInd - 1].children[tileInd + 1])) {mimeNeighbors++;}
+                        if (checkIfMime(rowList, rowInd - 1, tileInd + 1)) {mimeNeighbors++;}
                     }
                     if ((rowInd + 1) < verticalLimit && (tileInd + 1) < horizontalLimit) {
-                        if (checkIfMime(rowList[rowInd + 1].children[tileInd + 1])) {mimeNeighbors++;}
+                        if (checkIfMime(rowList, rowInd + 1, tileInd + 1)) {mimeNeighbors++;}
                     }
                     rowList[rowInd].children[tileInd].innerHTML = mimeNeighbors;
                 }
