@@ -1,7 +1,10 @@
 (function () {    
 
+    let width = 16;
+    let height = 9;
+
     /**
-     * Creates rows of tiles and runs a function that fills them with tiles for wach row
+     * Creates rows of tiles and runs a function that fills them with tiles for each row
      * @param {number} fieldHeight - the number of rows so the height of the playing field 
      * @param {number} fieldWidth - the number of tiles in each row so the width of the playing field
      */
@@ -11,10 +14,12 @@
         if (fieldHeight > 16) {fieldHeight = 16;}
         if (fieldWidth > 30) {fieldWidth = 30;}
 
+        const tileContainer = document.getElementById("tile-container");
+        tileContainer.innerHTML = '';
+
         for (let height = 0; height < fieldHeight; height++) {
             let newRow = document.createElement("div");
-
-            const tileContainer = document.getElementById("main-container");
+            
             tileContainer.appendChild(newRow);
 
             newRow.classList.add("tile-row"); 
@@ -23,7 +28,7 @@
     }
 
     /**
-     * Fills avery row with tile elements
+     * Fills every row with tile elements
      * @param {Object} tileRow - the row object which will house tiles
      * @param {number} fieldWidth  - the number of tiles to be put into the selected row
      */
@@ -31,7 +36,7 @@
         for (let width = 0; width < fieldWidth; width++) {
             let newTile = document.createElement("div");
             newTile.classList.add("tile-unclicked");
-            newTile.dataset.mime = false;
+            newTile.dataset.mime = "false";
 
             tileRow.appendChild(newTile);
         }
@@ -55,13 +60,59 @@
 
             if (selectedTile.dataset.mime === "true") {continue;}
             else {
-                selectedTile.dataset.mime = true;
+                selectedTile.dataset.mime = "true";
                 mimesLeft--;
             }
         }        
     }
 
-    createTileRows(40, 40);
-    createMimes(99)
+    const checkIfMime = (node) => {
+        if (node.dataset.mime === "true") {return true;}
+        return false;
+    }
+
+    const createMimeNeighbors = () => {
+        const rowList = document.getElementsByClassName("tile-row");
+        const verticalLimit = height;
+        const horizontalLimit = width;   
+
+        for (let rowInd = 0; rowInd < verticalLimit; rowInd++) {            
+            for (let tileInd = 0; tileInd < horizontalLimit; tileInd++) {
+                if (rowList[rowInd].children[tileInd].dataset.mime != "true") {   
+                    let mimeNeighbors = 0;
+                    if ((tileInd - 1) >= 0) {
+                        if (checkIfMime(rowList[rowInd].children[tileInd - 1])) {mimeNeighbors++;}
+                    }
+                    if ((tileInd + 1) < horizontalLimit) {
+                        if (checkIfMime(rowList[rowInd].children[tileInd + 1])) {mimeNeighbors++;}
+                    }
+                    if ((rowInd - 1) >= 0) {
+                        if (checkIfMime(rowList[rowInd - 1].children[tileInd])) {mimeNeighbors++;}
+                    }
+                    if ((rowInd + 1) < verticalLimit) {
+                        if (checkIfMime(rowList[rowInd + 1].children[tileInd])) {mimeNeighbors++;}
+                    }
+                    if ((rowInd - 1) >= 0 && (tileInd - 1) >= 0) {
+                        if (checkIfMime(rowList[rowInd - 1].children[tileInd - 1])) {mimeNeighbors++;}
+                    }
+                    if ((rowInd + 1) < verticalLimit && (tileInd - 1) >= 0) {
+                        if (checkIfMime(rowList[rowInd + 1].children[tileInd - 1])) {mimeNeighbors++;}
+                    }
+                    if ((rowInd - 1) >= 0 && (tileInd + 1) < horizontalLimit) {
+                        if (checkIfMime(rowList[rowInd - 1].children[tileInd + 1])) {mimeNeighbors++;}
+                    }
+                    if ((rowInd + 1) < verticalLimit && (tileInd + 1) < horizontalLimit) {
+                        if (checkIfMime(rowList[rowInd + 1].children[tileInd + 1])) {mimeNeighbors++;}
+                    }
+                    rowList[rowInd].children[tileInd].innerHTML = mimeNeighbors;
+                }
+            }
+        }
+
+    }
+
+    createTileRows(height, width);        
+    createMimes(10);
+    createMimeNeighbors();
     
 })();

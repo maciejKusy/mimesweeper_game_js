@@ -20,9 +20,9 @@ h1 {
   font-size: 2.5rem;
 }
 
-.tile-container {
+.main-container {
   background-color: #7e7e7e;
-  border: 2px outset #bfbfbf;
+  border: 3px outset #bfbfbf;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -30,8 +30,53 @@ h1 {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  margin-top: 5vh;
-  max-width: 90vw;
+  margin-top: 2rem;
+}
+
+.top-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  background-color: #7e7e7e;
+  padding: 5px;
+}
+
+.display {
+  background-color: #0d0d0d;
+  border: 3px inset #bfbfbf;
+  height: 3rem;
+  width: 5rem;
+}
+
+.new-game-button {
+  background-color: #7e7e7e;
+  border: 3px outset #bfbfbf;
+  display: block;
+  height: 3rem;
+  width: 3rem;
+}
+
+.tile-container {
+  background-color: #7e7e7e;
+  border: 3px outset #bfbfbf;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  max-width: 60vw;
 }
 
 .tile-row {
@@ -49,9 +94,11 @@ h1 {
 
 .tile-unclicked {
   background-color: #7e7e7e;
-  border: 2px outset #bfbfbf;
+  border: 3px outset #bfbfbf;
   font-family: "Press Start 2P", arial;
   height: 1.5rem;
+  padding: auto;
+  text-align: center;
   width: 1.5rem;
 }
 

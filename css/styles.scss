@@ -1,12 +1,25 @@
+// General variables:
 $backgroundColor: bisque;
+$mainFontColor: #4d4d4d;
+
+// Tile and container variables:
 $tileColor: #7e7e7e;
 $tileBorderColor: #bfbfbf;
-$mainFontColor: #4d4d4d;
 $tileFont: 'Press Start 2P', arial;
 
+// Flag/Time display variables:
+$appBlack: #0d0d0d;
+
+//Mixin for main game container elements:
 @mixin main-theme {
     background-color: $tileColor;
-    border: 2px outset $tileBorderColor;
+    border: 3px outset $tileBorderColor;
+}
+
+// Mixin for common display characteristics:
+@mixin inline-flex-column {
+    display: inline-flex;
+    flex-direction: column;
 }
 
 body {
@@ -24,12 +37,39 @@ h1 {
     font-size: 2.5rem;
 }
 
+.main-container {
+    @include main-theme;
+    @include inline-flex-column;
+    margin-top: 2rem;
+}
+
+.top-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: $tileColor;
+    padding: 5px
+}
+
+.display {
+    background-color: $appBlack;
+    border: 3px inset $tileBorderColor;
+    height: 3rem;
+    width: 5rem;
+}
+
+.new-game-button {
+    @include main-theme;
+    display: block;
+    height: 3rem;
+    width: 3rem;
+}
+
 .tile-container {
     @include main-theme;
-    display: inline-flex;
-    flex-direction: column;
-    margin-top: 5vh;
-    max-width: 90vw;
+    @include inline-flex-column;
+    max-width: 60vw;
 }
 
 .tile-row {
@@ -42,6 +82,8 @@ h1 {
     @include main-theme;
     font-family: $tileFont;
     height: 1.5rem;
+    padding: auto;
+    text-align: center;
     width: 1.5rem;
 }
 

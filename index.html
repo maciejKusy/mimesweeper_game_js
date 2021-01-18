@@ -11,8 +11,18 @@
 <body>
     <h1>Boro's Mimesweeper</h1>
 
-    <!--below container is where the tiles will appear after the createTileRows function is run-->
-    <div id="main-container" class="tile-container"></div>
+    <div class="main-container">
+        <!--below contains the timer, the newgame button and the flag number display-->
+        <div class="top-container">
+            <div id="display-left" class="display"></div>
+            <button class="new-game-button"></button>
+            <div id="display-right" class="display"></div>
+        </div>
+
+        <!--below container is where the tiles will appear after the createTileRows function is run-->
+        <div id="tile-container" class="tile-container">
+        </div>
+    </div>   
 
     <script src="js/index.js" charset="utf-8"></script>
 </body>
