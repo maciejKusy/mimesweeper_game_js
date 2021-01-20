@@ -19,7 +19,7 @@ $appBlack: #0d0d0d;
 //Mixin for main game container elements:
 @mixin main-theme {
     background-color: $tileColor;
-    border: 3px outset $tileBorderColor;
+    border: 0.16rem outset $tileBorderColor;
 }
 
 // Mixin for common display characteristics:

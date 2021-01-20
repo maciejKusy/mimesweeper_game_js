@@ -23,7 +23,7 @@ h1 {
 
 .main-container {
   background-color: #7e7e7e;
-  border: 3px outset #bfbfbf;
+  border: 0.16rem outset #bfbfbf;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -61,7 +61,7 @@ h1 {
 
 .new-game-button {
   background-color: #7e7e7e;
-  border: 3px outset #bfbfbf;
+  border: 0.16rem outset #bfbfbf;
   display: block;
   height: 3rem;
   width: 3rem;
@@ -69,7 +69,7 @@ h1 {
 
 .tile-container {
   background-color: #7e7e7e;
-  border: 3px outset #bfbfbf;
+  border: 0.16rem outset #bfbfbf;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -95,7 +95,7 @@ h1 {
 
 .tile-unclicked {
   background-color: #7e7e7e;
-  border: 3px outset #bfbfbf;
+  border: 0.16rem outset #bfbfbf;
   font-family: "Press Start 2P", arial;
   height: 1.25rem;
   line-height: 1.25rem;

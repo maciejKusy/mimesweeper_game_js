@@ -5,6 +5,9 @@
             this.height = height;
             this.width = width;
             this.mimes = numberOfMimes;
+            this.createTileRows();
+            this.createMimes();
+            this.createMimeNeighbors();
         }        
     
         /**
@@ -39,7 +42,7 @@
                 let newTile = document.createElement("div");
                 newTile.classList.add("tile-unclicked");
                 newTile.dataset.content = null;
-                newTile.dataset.clicked = "false";
+                newTile.dataset.clicked = false;
     
                 tileRow.appendChild(newTile);
             }
@@ -76,8 +79,37 @@
          * @param {number} rowIndex - the index of the row / vertical coordinate of the tile;
          * @param {number} tileIndex - the index of the tile within the row / horizontal coordinate;
          */
-        checkIfMime = (matrix, rowIndex, tileIndex) => {
+        checkIfMimeByCoordinates = (matrix, rowIndex, tileIndex) => {
             if (matrix[rowIndex].children[tileIndex].dataset.content === "M") {return true;}
+            return false;
+        }
+
+        /**
+         * Check if the node(tile) is a mime tile;
+         * @param {Node} tile 
+         */
+        checkIfMimeByNode = tile => {
+            if (tile.dataset.content === "M") {return true;}
+            return false;
+        }
+
+        /**
+         * Check if the node(tile) at a given position withing the matrix is clicked;
+         * @param {NodeList} matrix - the list of all tile row divs;
+         * @param {number} rowIndex - the index of the row / vertical coordinate of the tile;
+         * @param {number} tileIndex - the index of the tile within the row / horizontal coordinate;
+         */
+        checkIfClickedByCoordinates = (matrix, rowIndex, tileIndex) => {
+            if (matrix[rowIndex].children[tileIndex].dataset.clicked === "true") {return true;}
+            return false;
+        }
+
+        /**
+         * Check if the node(tile) is a mime tile;
+         * @param {Node} tile 
+         */
+        checkIfClickedByNode = tile => {
+            if (tile.dataset.clicked === "true") {return true;}
             return false;
         }
         
@@ -107,31 +139,31 @@
     
             for (let rowInd = 0; rowInd < verticalLimit; rowInd++) {            
                 for (let tileInd = 0; tileInd < horizontalLimit; tileInd++) {
-                    if (!this.checkIfMime(rowList, rowInd, tileInd)) {
+                    if (!this.checkIfMimeByCoordinates(rowList, rowInd, tileInd)) {
                         let mimeNeighbors = 0;
                         if (tileInd - 1 >= 0) {
-                            if (this.checkIfMime(rowList, rowInd, tileInd - 1)) {mimeNeighbors++;}
+                            if (this.checkIfMimeByCoordinates(rowList, rowInd, tileInd - 1)) {mimeNeighbors++;}
                         }
                         if (tileInd + 1 < horizontalLimit) {
-                            if (this.checkIfMime(rowList, rowInd, tileInd + 1)) {mimeNeighbors++;}
+                            if (this.checkIfMimeByCoordinates(rowList, rowInd, tileInd + 1)) {mimeNeighbors++;}
                         }
                         if (rowInd - 1 >= 0) {
-                            if (this.checkIfMime(rowList, rowInd - 1, tileInd)) {mimeNeighbors++;}
+                            if (this.checkIfMimeByCoordinates(rowList, rowInd - 1, tileInd)) {mimeNeighbors++;}
                         }
                         if (rowInd + 1 < verticalLimit) {
-                            if (this.checkIfMime(rowList, rowInd + 1, tileInd)) {mimeNeighbors++;}
+                            if (this.checkIfMimeByCoordinates(rowList, rowInd + 1, tileInd)) {mimeNeighbors++;}
                         }
                         if (rowInd - 1 >= 0 && (tileInd - 1) >= 0) {
-                            if (this.checkIfMime(rowList, rowInd - 1, tileInd - 1)) {mimeNeighbors++;}
+                            if (this.checkIfMimeByCoordinates(rowList, rowInd - 1, tileInd - 1)) {mimeNeighbors++;}
                         }
                         if (rowInd + 1 < verticalLimit && (tileInd - 1) >= 0) {
-                            if (this.checkIfMime(rowList, rowInd + 1, tileInd - 1)) {mimeNeighbors++;}
+                            if (this.checkIfMimeByCoordinates(rowList, rowInd + 1, tileInd - 1)) {mimeNeighbors++;}
                         }
                         if (rowInd - 1 >= 0 && (tileInd + 1) < horizontalLimit) {
-                            if (this.checkIfMime(rowList, rowInd - 1, tileInd + 1)) {mimeNeighbors++;}
+                            if (this.checkIfMimeByCoordinates(rowList, rowInd - 1, tileInd + 1)) {mimeNeighbors++;}
                         }
                         if (rowInd + 1 < verticalLimit && (tileInd + 1) < horizontalLimit) {
-                            if (this.checkIfMime(rowList, rowInd + 1, tileInd + 1)) {mimeNeighbors++;}
+                            if (this.checkIfMimeByCoordinates(rowList, rowInd + 1, tileInd + 1)) {mimeNeighbors++;}
                         }
                         
                         let targetedTile = rowList[rowInd].children[tileInd];
@@ -141,59 +173,62 @@
                 }
             }
         }        
-    
+        
+        /**
+         * Reveals the contents of the clicked tile if said is not a Mime tile and propagates to other neighboring
+         * non-mime tiles
+         * @param {Node} tile - the tile that was the target of the mouseup event
+         */
         revealNonMimeTile = tile => {
             
             tile.classList.add("tile-clicked");
-            tile.dataset.clicked = true;
+            tile.dataset.clicked = true;            
 
-            if (tile.dataset.content != "0") {tile.innerHTML = "<span>" + tile.dataset.content + "</span>";}         
+            if (tile.dataset.content != "0") {tile.innerHTML = "<span>" + tile.dataset.content + "</span>";}
 
-            let rowList = document.getElementsByClassName("tile-row");
-            let row = tile.parentNode;
-            let rowInd = Array.prototype.indexOf.call(document.getElementsByClassName("tile-row"), row);            
-            let tileInd = Array.prototype.indexOf.call(row.children, tile);
-                
-            if (tile.dataset.content === "0") {                
+            else if (tile.dataset.content === "0") {    
+                const rowList = document.getElementsByClassName("tile-row");
+                const row = tile.parentNode;
+                const rowInd = Array.prototype.indexOf.call(document.getElementsByClassName("tile-row"), row);            
+                const tileInd = Array.prototype.indexOf.call(row.children, tile);            
 
                 if (tileInd - 1 >= 0) {
-                    if (!this.checkIfMime(rowList, rowInd, tileInd - 1) && rowList[rowInd].children[tileInd - 1].dataset.clicked === "false") {
+                    if (!this.checkIfMimeByCoordinates(rowList, rowInd, tileInd - 1) && !this.checkIfClickedByCoordinates(rowList, rowInd, tileInd - 1)) {
                         this.revealNonMimeTile(row.children[tileInd - 1]);                                               
                     }
-                }
-                
+                }                
                 if (tileInd + 1 < this.width) {
-                    if (!this.checkIfMime(rowList, rowInd, tileInd + 1) && rowList[rowInd].children[tileInd + 1].dataset.clicked === "false") {
+                    if (!this.checkIfMimeByCoordinates(rowList, rowInd, tileInd + 1) && !this.checkIfClickedByCoordinates(rowList, rowInd, tileInd + 1)) {
                         this.revealNonMimeTile(row.children[tileInd + 1]);                        
                     }
-                }
-                
+                }                
                 if (rowInd - 1 >= 0) {
-                    if (!this.checkIfMime(rowList, rowInd - 1, tileInd) && rowList[rowInd - 1].children[tileInd].dataset.clicked === "false") {
+                    if (!this.checkIfMimeByCoordinates(rowList, rowInd - 1, tileInd) && !this.checkIfClickedByCoordinates(rowList, rowInd - 1, tileInd)) {
                         this.revealNonMimeTile(rowList[rowInd - 1].children[tileInd]);
                     }
                 }
                 if (rowInd + 1 < this.height) {
-                    if (!this.checkIfMime(rowList, rowInd + 1, tileInd) && rowList[rowInd + 1].children[tileInd].dataset.clicked === "false") {
+                    if (!this.checkIfMimeByCoordinates(rowList, rowInd + 1, tileInd) && !this.checkIfClickedByCoordinates(rowList, rowInd + 1, tileInd)) {
                         this.revealNonMimeTile(rowList[rowInd + 1].children[tileInd]);
                     }
                 }                 
             }           
         }
 
-        handleNonMimeTileClicked = clickedEvent => {
-            let clickedTile = clickedEvent.target;
-            if (clickedTile.dataset.content != "M" && !clickedTile.innerHTML) {
-                this.revealNonMimeTile(clickedTile);
+        handleTileMouseup = mouseupEvent => {
+            let clickedTile = mouseupEvent.target;
+
+            if (clickedTile.classList.contains("tile-unclicked")) {
+
+                if (!this.checkIfMimeByNode(clickedTile) && !this.checkIfClickedByNode(clickedTile)) {
+                    this.revealNonMimeTile(clickedTile);
+                }
+                else if (this.checkIfMimeByNode(clickedTile)) {console.log("MIME!")}
             }
         }
     } 
 
-    let game = new PlayingField(100, 100, 10);
-    game.createTileRows();
-    game.createMimes();
-    game.createMimeNeighbors();
-
-    document.addEventListener("click", game.handleNonMimeTileClicked);
+    let game = new PlayingField(10, 10, 10);
+    document.addEventListener("mouseup", game.handleTileMouseup);
     
 })();
