@@ -1,11 +1,17 @@
 // General variables:
 $backgroundColor: bisque;
-$mainFontColor: #4d4d4d;
+$mainFont: 'Fredoka One', cursive;
+$mainFontColor: #19456b;
 
 // Tile and container variables:
 $tileColor: #7e7e7e;
 $tileBorderColor: #bfbfbf;
 $tileFont: 'Press Start 2P', arial;
+$fontColorOne: #3399ff;
+$fontColorTwo: #006600;
+$fontColorThree: #ff0000;
+$fontColorFour: #660033;
+$fontColorFivePlus: #4d004d;
 
 // Flag/Time display variables:
 $appBlack: #0d0d0d;
@@ -33,14 +39,15 @@ body {
 
 h1 {
     color: $mainFontColor;
-    font-family: $tileFont;
+    font-family: $mainFont;
     font-size: 2.5rem;
+    letter-spacing: 0.5rem;
 }
 
 .main-container {
     @include main-theme;
     @include inline-flex-column;
-    margin-top: 2rem;
+    margin-top: 1.75rem;
 }
 
 .top-container {
@@ -81,12 +88,37 @@ h1 {
 .tile-unclicked {
     @include main-theme;
     font-family: $tileFont;
-    height: 1.5rem;
-    padding: auto;
+    height: 1.25rem;
+    line-height: 1.25rem;
     text-align: center;
-    width: 1.5rem;
+    width: 1.25rem; 
+    span {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
+      }
 }
 
-.revealed {
-    background-color: red;
+.tile-clicked {
+    border-style: inset;
+}
+
+.one {
+    color: $fontColorOne;
+}
+
+.two {
+    color: $fontColorTwo;
+}
+
+.three {
+    color: $fontColorThree;
+}
+
+.four {
+    color: $fontColorFour;
+}
+
+.five-plus {
+    color: $fontColorFivePlus
 }

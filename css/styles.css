@@ -15,9 +15,10 @@ body {
 }
 
 h1 {
-  color: #4d4d4d;
-  font-family: "Press Start 2P", arial;
+  color: #19456b;
+  font-family: "Fredoka One", cursive;
   font-size: 2.5rem;
+  letter-spacing: 0.5rem;
 }
 
 .main-container {
@@ -30,7 +31,7 @@ h1 {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  margin-top: 2rem;
+  margin-top: 1.75rem;
 }
 
 .top-container {
@@ -96,13 +97,39 @@ h1 {
   background-color: #7e7e7e;
   border: 3px outset #bfbfbf;
   font-family: "Press Start 2P", arial;
-  height: 1.5rem;
-  padding: auto;
+  height: 1.25rem;
+  line-height: 1.25rem;
   text-align: center;
-  width: 1.5rem;
+  width: 1.25rem;
 }
 
-.revealed {
-  background-color: red;
+.tile-unclicked span {
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+}
+
+.tile-clicked {
+  border-style: inset;
+}
+
+.one {
+  color: #3399ff;
+}
+
+.two {
+  color: #006600;
+}
+
+.three {
+  color: #ff0000;
+}
+
+.four {
+  color: #660033;
+}
+
+.five-plus {
+  color: #4d004d;
 }
 /*# sourceMappingURL=styles.css.map */
