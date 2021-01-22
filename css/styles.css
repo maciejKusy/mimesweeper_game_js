@@ -62,9 +62,14 @@ h1 {
 .new-game-button {
   background-color: #7e7e7e;
   border: 0.16rem outset #bfbfbf;
+  cursor: pointer;
   display: block;
   height: 3rem;
   width: 3rem;
+}
+
+.new-game-button:active {
+  border-style: inset;
 }
 
 .tile-container {
@@ -111,6 +116,21 @@ h1 {
 
 .tile-clicked {
   border-style: inset;
+}
+
+.tile-clicked-mime {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70% 80%;
+  background-image: url("../img/mime_face.png");
+  background-color: #b30000;
+}
+
+.tile-flagged {
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 70% 80%;
+  background-image: url("../img/red_flag.png");
 }
 
 .one {
