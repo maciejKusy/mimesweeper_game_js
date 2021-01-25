@@ -7,10 +7,13 @@
             this.mimes = numberOfMimes;
             this.flags = numberOfMimes;
             this.tiles = new Map();
+            this.tilesClicked = 0;
+            this.timeElapsed = 0;
             this.createTileRows();
             this.createTileMap();
             this.createMimes();            
             this.createMimeNeighbors();
+            this.refreshFlagDisplay();
         }        
     
         /**
@@ -64,7 +67,8 @@
             const tileElements = document.getElementsByClassName("tile-unclicked");            
             
             for (let tileNum = 1; tileNum <= this.numberOfTiles; tileNum++) {
-                this.tiles.set(tileNum, tileElements[tileNum - 1]);            
+                this.tiles.set(tileNum, tileElements[tileNum - 1]);
+                tileElements[tileNum - 1].dataset.ordernum = tileNum;           
             }
         }
 
@@ -110,14 +114,6 @@
         checkIfClickedByTileNum = tileNum => {
             if (this.tiles.get(tileNum).dataset.clicked === "true") {return true;}
             return false;
-        }
-
-        /**
-         * Based on the tile, acquires the order number assigned to this tile in the objects tile map;
-         * @param {Node} tile - the tile the number of which we want to acquire;
-         */
-        getTileOrderNumber = tile => {
-            return [...this.tiles].find(([orderNumber, tileMatch]) => tile == tileMatch)[0];
         }
 
         /**
@@ -180,7 +176,7 @@
         /**
          * Reveals all mime tiles, stops the timer and blocks further revealing of tiles;
          */
-        gameOver  = () => {
+        gameOver = () => {
             document.removeEventListener("click", currentGame.handleTileClick);
             document.removeEventListener("contextmenu", currentGame.handleRightClick);
 
@@ -189,6 +185,16 @@
                 tile.classList.add("tile-clicked");
                 tile.classList.add("tile-clicked-mime");
             });
+        }
+
+        /**
+         * Verifies whether all non-mime tiles have been clicked;
+         */
+        checkGameWon = () => {
+            if (this.tilesClicked === this.numberOfTiles - this.mimes) {
+                this.gameOver();
+                //TO BE CHANGED
+            }
         }
         
         /**
@@ -212,23 +218,26 @@
          */
         revealTile = tile => {
             tile.dataset.clicked = true;
+            this.tilesClicked++;
 
             if (tile.dataset.flagged === "true") {
                 tile.classList.remove("tile-flagged");
                 this.flags++;
+                this.refreshFlagDisplay();
             }
 
             if (tile.dataset.content === "M") {
                 this.gameOver();
-                //to be expanded
-            } else if (tile.dataset.content != "0") {                
+            } else if (tile.dataset.content != "0") {
+                this.checkGameWon();              
                 this.setColor(tile);
                 tile.classList.add("tile-clicked");
                 tile.innerHTML = "<span>" + tile.dataset.content + "</span>";                
             } else if (tile.dataset.content === "0") {
+                this.checkGameWon();
                 tile.classList.add("tile-clicked");
 
-                let tileNum = this.getTileOrderNumber(tile) 
+                let tileNum = parseInt(tile.dataset.ordernum, 10);
 
                 let left = tileNum - 1;                
                 if (left > 0 && left % this.width != 0) {
@@ -237,7 +246,7 @@
                     }                        
                 }
                 let right = tileNum + 1;
-                if (right < this.numberOfTiles && right % this.width != 1) {
+                if (right <= this.numberOfTiles && right % this.width != 1) {
                     if (this.tiles.get(right).dataset.clicked === "false") {
                         this.revealTile(this.tiles.get(right));
                     }  
@@ -254,43 +263,58 @@
                         this.revealTile(this.tiles.get(down));
                     }  
                 }
-            }
+            } 
         }
 
+        /**
+         * Handles setting up flags fired by a right click;
+         * @param {Event} rClickEvent - the event fired when right mouse button clicked;
+         */
         handleRightClick = rClickEvent => {
             let clickedTile = rClickEvent.target;
 
             if (clickedTile.dataset.flagged === "false" && clickedTile.dataset.clicked === "false") {
-                rClickEvent.preventDefault();
-                clickedTile.dataset.flagged = true;
-                clickedTile.classList.add("tile-flagged");
-                this.flags--;
+                if (this.flags > 0) {    
+                    rClickEvent.preventDefault();
+                    clickedTile.dataset.flagged = true;
+                    clickedTile.classList.add("tile-flagged");
+                    this.flags--;
+                    this.refreshFlagDisplay();
+                }
             } else if (clickedTile.dataset.flagged === "true") {
                 rClickEvent.preventDefault();
                 clickedTile.dataset.flagged = false;
                 clickedTile.classList.remove("tile-flagged");
                 this.flags++;
+                this.refreshFlagDisplay();
             }
-        }        
-    } 
+        }
+
+        /**
+         * Refreshes the dislplay of flags left to keep the user informed on how many they got left;
+         */
+        refreshFlagDisplay = () => {
+            const flagDisplay = document.getElementById("display-left");
+            flagDisplay.innerHTML = this.flags;
+        }
+    }     
     
-    let width = 0;
-    let height = 0;
-    let mimes = 0;
-    let currentGame = new PlayingField();
+    let height = 100;
+    let width = 100;
+    let mimes = 10;
+    let currentGame = new PlayingField(height, width, mimes);
+    const newGameButton = document.querySelector(".new-game-button"); 
 
     /**
      * Sets up new game by assigning a new instance of the class to the currentGame variable;
      */
     const newGame = () => {
-        currentGame = new PlayingField(width, height, mimes);
+        currentGame = new PlayingField(height, width, mimes);
         document.addEventListener("click", currentGame.handleTileClick);
         document.addEventListener("contextmenu", currentGame.handleRightClick)
     }
-
-    const newGameButton = document.querySelector(".new-game-button");    
-    newGameButton.addEventListener("click", newGame)
-
+       
+    newGameButton.addEventListener("click", newGame);
     document.addEventListener("click", currentGame.handleTileClick);
     document.addEventListener("contextmenu", currentGame.handleRightClick)
     

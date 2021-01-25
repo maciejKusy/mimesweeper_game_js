@@ -9,6 +9,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Major+Mono+Display&display=swap" rel="stylesheet">
 </head>
 <body>
     <h1>Boro's Mimesweeper</h1>
@@ -18,7 +20,9 @@
         <div class="top-container">
             <div id="display-left" class="display"></div>
             <button class="new-game-button"></button>
-            <div id="display-right" class="display"></div>
+            <div id="display-right" class="display">
+                <span id = "minutes"></span>:<span id = "seconds"></span>
+            </div>
         </div>
 
         <!--below container is where the tiles will appear after the createTileRows function is run-->
