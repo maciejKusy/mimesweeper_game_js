@@ -302,27 +302,27 @@
         }
 
         /**
-         * Resets the playing field and creates the necessary event listeners anew;
+         * Resets the playing field, the timer and creates the necessary event listeners anew;
          */
         newGame = () => {
             this.minutes.textContent = "0";
             this.seconds.textContent = "00";
 
             currentGame = new PlayingField(height, width, mimes); 
+            timer = setInterval(currentGame.refreshTimeDisplay, 1000);
 
             document.addEventListener("click", currentGame.handleTileClick);
-            document.addEventListener("contextmenu", currentGame.handleRightClick);
-            timer = setInterval(currentGame.refreshTimeDisplay, 1000);
+            document.addEventListener("contextmenu", currentGame.handleRightClick);            
         }
 
         /**
-         * Refreshes the display of time passed;
+         * Refreshes the display of time passed
          */
         refreshTimeDisplay = () => {
             this.timeElapsed++;
 
-            minutes = parseInt(this.timeElapsed / 60, 10);
-            seconds = this.timeElapsed % 60;
+            let minutes = parseInt(this.timeElapsed / 60, 10);
+            let seconds = this.timeElapsed % 60;
 
             seconds = seconds < 10 ? "0" + seconds : seconds;
 

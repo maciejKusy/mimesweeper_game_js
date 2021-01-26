@@ -42,7 +42,9 @@ $displayFont: 'Major Mono Display', monospace;
 }
 
 body {
-    background-color: $backgroundColor;
+    //background-color: $backgroundColor;
+    background-image: url(../img/backgr.jpg);
+    background-size: cover;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -78,7 +80,7 @@ h1 {
     border: 3px inset $tileBorderColor;
     color: $mimeBackgroundColor;
     font-family: $displayFont;
-    font-size: 2.5rem;
+    font-size: 2.25rem;
     height: 3rem;
     letter-spacing: -0.7rem;
     padding: 0.5rem;
