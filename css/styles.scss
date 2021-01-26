@@ -4,8 +4,9 @@ $mainFont: 'Fredoka One', cursive;
 $mainFontColor: #19456b;
 
 // Tile and container variables:
-$tileColor: #7e7e7e;
-$tileBorderColor: #bfbfbf;
+$tileColor: #6d6d6d;
+$tileClickedColor:  #b9b9b9;
+$tileBorderColor: #9b9b9b;
 $tileFont: 'Press Start 2P', arial;
 $fontColorOne: #3399ff;
 $fontColorTwo: #006600;
@@ -30,6 +31,7 @@ $displayFont: 'Major Mono Display', monospace;
 @mixin inline-flex-column {
     display: inline-flex;
     flex-direction: column;
+    align-items: center;
 }
 
 // Mixin for common centering of mime/flag images:
@@ -67,7 +69,8 @@ h1 {
     justify-content: space-between;
     align-items: center;
     background-color: $tileColor;
-    padding: 5px
+    padding: 5px;
+    width: 95%;
 }
 
 .display {
@@ -122,6 +125,7 @@ h1 {
 }
 
 .tile-clicked {
+    background-color: $tileClickedColor;
     border-style: inset;
 }
 

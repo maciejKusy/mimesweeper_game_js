@@ -9,6 +9,8 @@
             this.tiles = new Map();
             this.tilesClicked = 0;
             this.timeElapsed = 0;
+            this.minutes = document.getElementById("minutes");
+            this.seconds = document.getElementById("seconds");
             this.createTileRows();
             this.createTileMap();
             this.createMimes();            
@@ -22,8 +24,8 @@
         createTileRows = () => {
             let numberOfTiles = 0; 
 
-            if (this.height < 9) {this.height = 9;}
-            if (this.width < 9) {this.width = 9;}
+            if (this.height < 10) {this.height = 10;}
+            if (this.width < 10) {this.width = 10;}
             if (this.height > 16) {this.height = 16;}
             if (this.width > 30) {this.width = 30;}
             
@@ -177,8 +179,9 @@
          * Reveals all mime tiles, stops the timer and blocks further revealing of tiles;
          */
         gameOver = () => {
-            document.removeEventListener("click", currentGame.handleTileClick);
-            document.removeEventListener("contextmenu", currentGame.handleRightClick);
+            document.removeEventListener("click", this.handleTileClick);
+            document.removeEventListener("contextmenu", this.handleRightClick);
+            clearInterval(timer);
 
             let mimeTiles = document.querySelectorAll('[data-content=M]');
             mimeTiles.forEach(function(tile) {
@@ -297,25 +300,57 @@
             const flagDisplay = document.getElementById("display-left");
             flagDisplay.innerHTML = this.flags;
         }
+
+        /**
+         * Resets the playing field and creates the necessary event listeners anew;
+         */
+        newGame = () => {
+            this.minutes.textContent = "0";
+            this.seconds.textContent = "00";
+
+            currentGame = new PlayingField(height, width, mimes); 
+
+            document.addEventListener("click", currentGame.handleTileClick);
+            document.addEventListener("contextmenu", currentGame.handleRightClick);
+            timer = setInterval(currentGame.refreshTimeDisplay, 1000);
+        }
+
+        /**
+         * Refreshes the display of time passed;
+         */
+        refreshTimeDisplay = () => {
+            this.timeElapsed++;
+
+            minutes = parseInt(this.timeElapsed / 60, 10);
+            seconds = this.timeElapsed % 60;
+
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            this.minutes.textContent = minutes;
+            this.seconds.textContent = seconds;
+        }
     }     
     
+    /**
+     * Setting global variables;
+     */
     let height = 100;
     let width = 100;
     let mimes = 10;
     let currentGame = new PlayingField(height, width, mimes);
-    const newGameButton = document.querySelector(".new-game-button"); 
+    let timer = setInterval(currentGame.refreshTimeDisplay, 1000);
+    const newGameButton = document.querySelector(".new-game-button");    
 
     /**
-     * Sets up new game by assigning a new instance of the class to the currentGame variable;
+     * Creating event listeners for the first time;
      */
-    const newGame = () => {
-        currentGame = new PlayingField(height, width, mimes);
-        document.addEventListener("click", currentGame.handleTileClick);
-        document.addEventListener("contextmenu", currentGame.handleRightClick)
-    }
-       
-    newGameButton.addEventListener("click", newGame);
+    newGameButton.addEventListener("click", function () {
+        document.removeEventListener("click", currentGame.handleTileClick);
+        document.removeEventListener("contextmenu", currentGame.handleRightClick);
+        clearInterval(timer);
+        currentGame.newGame()});
+
     document.addEventListener("click", currentGame.handleTileClick);
-    document.addEventListener("contextmenu", currentGame.handleRightClick)
+    document.addEventListener("contextmenu", currentGame.handleRightClick);
     
 })();
