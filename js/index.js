@@ -334,17 +334,47 @@
     /**
      * Setting global variables;
      */
-    let height = 100;
-    let width = 100;
+    let height = 10;
+    let width = 10;
     let mimes = 10;
     let currentGame = new PlayingField(height, width, mimes);
     let timer = setInterval(currentGame.refreshTimeDisplay, 1000);
-    const newGameButton = document.querySelector(".new-game-button");    
+    const newGameButton = document.querySelector(".new-game-button"); 
+    const easyButton = document.querySelector("#easy");
+    const mediumButton = document.querySelector("#medium");
+    const hardButton = document.querySelector("#hard");   
 
     /**
      * Creating event listeners for the first time;
      */
     newGameButton.addEventListener("click", function () {
+        document.removeEventListener("click", currentGame.handleTileClick);
+        document.removeEventListener("contextmenu", currentGame.handleRightClick);
+        clearInterval(timer);
+        currentGame.newGame()});
+
+    easyButton.addEventListener("click", function() {
+        height = 10;
+        width = 10;
+        mimes = 10;
+        document.removeEventListener("click", currentGame.handleTileClick);
+        document.removeEventListener("contextmenu", currentGame.handleRightClick);
+        clearInterval(timer);
+        currentGame.newGame()});
+
+    mediumButton.addEventListener("click", function() {
+        height = 16;
+        width = 16;
+        mimes = 40;
+        document.removeEventListener("click", currentGame.handleTileClick);
+        document.removeEventListener("contextmenu", currentGame.handleRightClick);
+        clearInterval(timer);
+        currentGame.newGame()});
+
+    hardButton.addEventListener("click", function() {
+        height = 16;
+        width = 30;
+        mimes = 99;
         document.removeEventListener("click", currentGame.handleTileClick);
         document.removeEventListener("contextmenu", currentGame.handleRightClick);
         clearInterval(timer);

@@ -1,7 +1,7 @@
 // General variables:
 $backgroundColor: bisque;
 $mainFont: 'Fredoka One', cursive;
-$mainFontColor: #19456b;
+$mainFontColor: #0c2c47;
 
 // Tile and container variables:
 $tileColor: #6d6d6d;
@@ -16,6 +16,14 @@ $fontColorFivePlus: #4d004d;
 $mimeBackgroundColor: #b30000;
 $mimeImage: "../img/mime_face.png";
 $flagImage: "../img/red_flag.png";
+
+// Button variables:
+$buttonFont: 'Press Start 2P', arial;
+$buttonFontHighlightColor: #bbbfca;
+$difficultyButtonHeight: 3rem;
+$difficultyButtonWidth: 5rem;
+$newGameButtonHeight: 3rem;
+$newGameButtonWidth: 3rem;
 
 // Flag/Time display variables:
 $appBlack: #0d0d0d;
@@ -62,7 +70,8 @@ h1 {
 .main-container {
     @include main-theme;
     @include inline-flex-column;
-    margin-top: 1.75rem;
+    box-shadow: 2px 2px 10px rgb(30, 43, 29);
+    margin-top: 1.25rem;
 }
 
 .top-container {
@@ -92,12 +101,33 @@ h1 {
     @include main-theme;
     cursor: pointer;
     display: block;
-    height: 3rem;
-    width: 3rem;
+    height: $newGameButtonHeight;
+    width: $newGameButtonWidth
 }
 
 .new-game-button:active {
     border-style: inset;
+}
+
+.difficulty-button {
+    @include main-theme;
+    cursor: pointer;
+    color: $mainFontColor;
+    display: block;
+    flex: auto;
+    font-family: $buttonFont;
+    font-size: 0.7rem;
+    height: $difficultyButtonHeight;
+    width: $difficultyButtonWidth;
+    transition: color 0.5s ease-out;
+}
+
+.difficulty-button:active {
+    border-style: inset;
+}
+
+.difficulty-button:hover {
+    color: $buttonFontHighlightColor;
 }
 
 .tile-container {
@@ -118,12 +148,17 @@ h1 {
     height: 1.25rem;
     line-height: 1.25rem;
     text-align: center;
+    transition: background-color 0.25s ease-out;
     width: 1.25rem; 
     span {
         display: inline-block;
         vertical-align: middle;
         line-height: normal;
       }
+}
+
+.tile-unclicked:hover {
+    background-color: $tileBorderColor;
 }
 
 .tile-clicked {
