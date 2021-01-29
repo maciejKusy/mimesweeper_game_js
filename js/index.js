@@ -1,5 +1,8 @@
 (function () {    
 
+    /**
+     * The class encompassing all the logic behind tiles, buttons and displays visible on the screen;
+     */
     class PlayingField {
         constructor(height=9, width=9, numberOfMimes=10) {
             this.height = height;
@@ -19,7 +22,7 @@
         }        
     
         /**
-         * Creates rows of tiles and runs a function that fills them with tiles for each row
+         * Creates rows of tiles and runs a function that fills each row with tiles;
          */
         createTileRows = () => {
             let numberOfTiles = 0; 
@@ -45,7 +48,7 @@
         }
     
         /**
-         * Fills every row with tile elements
+         * Fills every row with tile elements;
          * @param {Node} tileRow - the row object which will house tiles
          * @param {number} fieldWidth  - the number of tiles to be put into the selected row
          */
@@ -62,7 +65,7 @@
         }
         
         /**
-         * Creates a 'map' of tiles - an object containing pairs of number:tile_element for navigating the
+         * Creates a 'map' of tiles - an object containing pairs of number:tileElement for navigating the
          * matrix effectively and without traversing indexes;
          */
         createTileMap = () => {
@@ -76,7 +79,7 @@
 
         /**
          * Randomly chooses tiles and if relevant, turns them into mime tiles. While loop until the number
-         * of mime tiles corresponds to the number provided to the function
+         * of mime tiles corresponds to the number provided to the function;
          */
         createMimes = () => {
             let mimesLeft;
@@ -179,15 +182,37 @@
          * Reveals all mime tiles, stops the timer and blocks further revealing of tiles;
          */
         gameOver = () => {
+            document.removeEventListener("mousedown", currentGame.handleMouseDown);
+            document.removeEventListener("mouseup", currentGame.handleMouseUp);
             document.removeEventListener("click", this.handleTileClick);
             document.removeEventListener("contextmenu", this.handleRightClick);
             clearInterval(timer);
+            newGameButton.classList.add("new-game-button-lost");
 
             let mimeTiles = document.querySelectorAll('[data-content=M]');
             mimeTiles.forEach(function(tile) {
                 tile.classList.add("tile-clicked");
                 tile.classList.add("tile-clicked-mime");
             });
+        }
+
+        /**
+         * Resets the playing field, the timer and creates the necessary event listeners anew;
+         */
+        newGame = () => {
+            this.minutes.textContent = "0";
+            this.seconds.textContent = "00";
+
+            currentGame = new PlayingField(height, width, mimes);
+            
+            document.addEventListener("mousedown", currentGame.handleMouseDown);
+            document.addEventListener("mouseup", currentGame.handleMouseUp);
+            document.addEventListener("click", currentGame.handleTileClick);
+            document.addEventListener("contextmenu", currentGame.handleRightClick);
+            timer = setInterval(currentGame.refreshTimeDisplay, 1000);
+            if (newGameButton.classList.contains("new-game-button-lost")) {
+                newGameButton.classList.remove("new-game-button-lost");
+            }
         }
 
         /**
@@ -302,20 +327,6 @@
         }
 
         /**
-         * Resets the playing field, the timer and creates the necessary event listeners anew;
-         */
-        newGame = () => {
-            this.minutes.textContent = "0";
-            this.seconds.textContent = "00";
-
-            currentGame = new PlayingField(height, width, mimes); 
-            timer = setInterval(currentGame.refreshTimeDisplay, 1000);
-
-            document.addEventListener("click", currentGame.handleTileClick);
-            document.addEventListener("contextmenu", currentGame.handleRightClick);            
-        }
-
-        /**
          * Refreshes the display of time passed
          */
         refreshTimeDisplay = () => {
@@ -329,6 +340,32 @@
             this.minutes.textContent = minutes;
             this.seconds.textContent = seconds;
         }
+
+        /**
+         * Handles the adjustment of newGameButton image when mouse down on an unclicked tile;
+         * @param {Event} mousedownEvent 
+         */
+        handleMouseDown = mousedownEvent => {
+            let clickedTile = mousedownEvent.target;
+
+            if (mousedownEvent.button === 0) {
+                if (clickedTile.dataset.clicked === "false") {
+                    newGameButton.classList.toggle("new-game-button-tense");
+                }
+            }
+        }
+
+        /**
+         * Handles the adjustment of newGameButton image on mouseup;
+         * @param {Event} mouseupEvent 
+         */
+        handleMouseUp = mouseupEvent => {
+            if (mouseupEvent.button === 0) {
+                if (newGameButton.classList.contains("new-game-button-tense")) {
+                    newGameButton.classList.remove("new-game-button-tense");
+                }
+            }
+        }
     }     
     
     /**
@@ -339,47 +376,34 @@
     let mimes = 10;
     let currentGame = new PlayingField(height, width, mimes);
     let timer = setInterval(currentGame.refreshTimeDisplay, 1000);
-    const newGameButton = document.querySelector(".new-game-button"); 
+    const newGameButton = document.querySelector("#new-game"); 
     const easyButton = document.querySelector("#easy");
     const mediumButton = document.querySelector("#medium");
-    const hardButton = document.querySelector("#hard");   
+    const hardButton = document.querySelector("#hard");  
+
+    /**
+     * Removes the event listeners in order for them not to overlap with the existing listeners, resets
+     * the timer for it not to overlap with the existing interval as well. Runs the game objects newGame 
+     * method;
+     */
+    const resetCurrentGame = () => {
+        document.removeEventListener("mousedown", currentGame.handleMouseDown);
+        document.removeEventListener("mouseup", currentGame.handleMouseUp);
+        document.removeEventListener("click", currentGame.handleTileClick);
+        document.removeEventListener("contextmenu", currentGame.handleRightClick);
+        clearInterval(timer);
+        currentGame.newGame();
+    }
 
     /**
      * Creating event listeners for the first time;
      */
-    newGameButton.addEventListener("click", function () {
-        document.removeEventListener("click", currentGame.handleTileClick);
-        document.removeEventListener("contextmenu", currentGame.handleRightClick);
-        clearInterval(timer);
-        currentGame.newGame()});
-
-    easyButton.addEventListener("click", function() {
-        height = 10;
-        width = 10;
-        mimes = 10;
-        document.removeEventListener("click", currentGame.handleTileClick);
-        document.removeEventListener("contextmenu", currentGame.handleRightClick);
-        clearInterval(timer);
-        currentGame.newGame()});
-
-    mediumButton.addEventListener("click", function() {
-        height = 16;
-        width = 16;
-        mimes = 40;
-        document.removeEventListener("click", currentGame.handleTileClick);
-        document.removeEventListener("contextmenu", currentGame.handleRightClick);
-        clearInterval(timer);
-        currentGame.newGame()});
-
-    hardButton.addEventListener("click", function() {
-        height = 16;
-        width = 30;
-        mimes = 99;
-        document.removeEventListener("click", currentGame.handleTileClick);
-        document.removeEventListener("contextmenu", currentGame.handleRightClick);
-        clearInterval(timer);
-        currentGame.newGame()});
-
+    newGameButton.addEventListener("click", resetCurrentGame);
+    easyButton.addEventListener("click", function() {height = 10; width = 10; mimes = 10; resetCurrentGame();});
+    mediumButton.addEventListener("click", function() {height = 16; width = 16; mimes = 40; resetCurrentGame();});
+    hardButton.addEventListener("click", function() {height = 16; width = 30; mimes = 99; resetCurrentGame();});    
+    document.addEventListener("mousedown", currentGame.handleMouseDown);
+    document.addEventListener("mouseup", currentGame.handleMouseUp);
     document.addEventListener("click", currentGame.handleTileClick);
     document.addEventListener("contextmenu", currentGame.handleRightClick);
     

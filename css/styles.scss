@@ -24,6 +24,9 @@ $difficultyButtonHeight: 3rem;
 $difficultyButtonWidth: 5rem;
 $newGameButtonHeight: 3rem;
 $newGameButtonWidth: 3rem;
+$newGameButtonPicDefault: "../img/default.png";
+$newGameButtonPicTense: "../img/tense.png";
+$newGameButtonPicLost: "../img/loser.png";
 
 // Flag/Time display variables:
 $appBlack: #0d0d0d;
@@ -57,7 +60,7 @@ body {
     flex-direction: column;
     align-items: center;
     height: 100%;
-    padding-top: 5vh;
+    padding-top: 2.5vh;
 }
 
 h1 {
@@ -65,12 +68,13 @@ h1 {
     font-family: $mainFont;
     font-size: 2.5rem;
     letter-spacing: 0.5rem;
+    text-shadow: 4px 4px 7.5px rgb(30, 43, 29);
 }
 
 .main-container {
     @include main-theme;
     @include inline-flex-column;
-    box-shadow: 2px 2px 10px rgb(30, 43, 29);
+    box-shadow: 5px 5px 14px rgb(30, 43, 29);
     margin-top: 1.25rem;
 }
 
@@ -99,6 +103,10 @@ h1 {
 
 .new-game-button {
     @include main-theme;
+    @include image-center;
+    background-image: url($newGameButtonPicDefault);
+    background-size: 90% 90%;
+    border-width: 0.3rem;
     cursor: pointer;
     display: block;
     height: $newGameButtonHeight;
@@ -109,8 +117,17 @@ h1 {
     border-style: inset;
 }
 
+.new-game-button-tense {
+    background-image: url($newGameButtonPicTense);
+}
+
+.new-game-button-lost {
+    background-image: url($newGameButtonPicLost);
+}
+
 .difficulty-button {
     @include main-theme;
+    border-width: 0.3rem;
     cursor: pointer;
     color: $mainFontColor;
     display: block;
@@ -118,8 +135,9 @@ h1 {
     font-family: $buttonFont;
     font-size: 0.7rem;
     height: $difficultyButtonHeight;
-    width: $difficultyButtonWidth;
+    text-align: center;
     transition: color 0.5s ease-out;
+    width: $difficultyButtonWidth;
 }
 
 .difficulty-button:active {
@@ -164,6 +182,7 @@ h1 {
 .tile-clicked {
     background-color: $tileClickedColor;
     border-style: inset;
+    border-color: $tileClickedColor;
 }
 
 .tile-clicked-mime {
