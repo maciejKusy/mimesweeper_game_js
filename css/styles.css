@@ -1,5 +1,5 @@
 body {
-  background-image: url(../img/backgr.jpg);
+  background-image: url("../img/backgr.jpg");
   background-size: cover;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -98,6 +98,10 @@ h1 {
 
 .new-game-button-lost {
   background-image: url("../img/loser.png");
+}
+
+.new-game-button-won {
+  background-image: url("../img/victor.png");
 }
 
 .difficulty-button {
@@ -217,5 +221,61 @@ h1 {
 
 .five-plus {
   color: #4d004d;
+}
+
+.game-won-overlay {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: rgba(17, 18, 31, 0.7);
+  position: fixed;
+  top: 0;
+  left: 0;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+
+.game-won-overlay-closed {
+  display: none;
+}
+
+.game-won-popup {
+  background-color: #6d6d6d;
+  border: 0.16rem outset #9b9b9b;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  height: 30vh;
+  width: 40vw;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+}
+
+.game-won-popup span {
+  color: #0c2c47;
+  font-family: "Press Start 2P", arial;
+}
+
+.game-won-popup button {
+  -webkit-box-flex: 0;
+      -ms-flex-positive: 0;
+          flex-grow: 0;
+}
+
+.game-won-popup #final-time {
+  font-size: 2rem;
 }
 /*# sourceMappingURL=styles.css.map */

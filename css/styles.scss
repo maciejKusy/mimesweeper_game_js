@@ -1,7 +1,9 @@
 // General variables:
-$backgroundColor: bisque;
+$backgroundImage: "../img/backgr.jpg";
 $mainFont: 'Fredoka One', cursive;
 $mainFontColor: #0c2c47;
+$shadowColor: rgb(30, 43, 29);
+$gameWonOverlayColor: rgba(17, 18, 31, 0.7);
 
 // Tile and container variables:
 $tileColor: #6d6d6d;
@@ -27,6 +29,7 @@ $newGameButtonWidth: 3rem;
 $newGameButtonPicDefault: "../img/default.png";
 $newGameButtonPicTense: "../img/tense.png";
 $newGameButtonPicLost: "../img/loser.png";
+$newGameButtonPicWon: "../img/victor.png";
 
 // Flag/Time display variables:
 $appBlack: #0d0d0d;
@@ -54,7 +57,7 @@ $displayFont: 'Major Mono Display', monospace;
 
 body {
     //background-color: $backgroundColor;
-    background-image: url(../img/backgr.jpg);
+    background-image: url($backgroundImage);
     background-size: cover;
     display: flex;
     flex-direction: column;
@@ -68,13 +71,13 @@ h1 {
     font-family: $mainFont;
     font-size: 2.5rem;
     letter-spacing: 0.5rem;
-    text-shadow: 4px 4px 7.5px rgb(30, 43, 29);
+    text-shadow: 4px 4px 7.5px $shadowColor;
 }
 
 .main-container {
     @include main-theme;
     @include inline-flex-column;
-    box-shadow: 5px 5px 14px rgb(30, 43, 29);
+    box-shadow: 5px 5px 14px $shadowColor;
     margin-top: 1.25rem;
 }
 
@@ -123,6 +126,10 @@ h1 {
 
 .new-game-button-lost {
     background-image: url($newGameButtonPicLost);
+}
+
+.new-game-button-won {
+    background-image: url($newGameButtonPicWon);
 }
 
 .difficulty-button {
@@ -214,4 +221,40 @@ h1 {
 
 .five-plus {
     color: $fontColorFivePlus
+}
+
+.game-won-overlay {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    background-color: $gameWonOverlayColor;
+    position: fixed;
+    top: 0;
+    left: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-won-overlay-closed {
+    display: none;
+}
+
+.game-won-popup {
+    @include main-theme;
+    display: flex;
+    height: 30vh;
+    width: 40vw;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    span {
+        color: $mainFontColor;
+        font-family: $buttonFont;
+    }
+    button {
+        flex-grow:0;
+    }
+    #final-time {
+        font-size: 2rem;
+    }
 }

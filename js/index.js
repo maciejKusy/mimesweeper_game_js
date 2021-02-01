@@ -197,6 +197,35 @@
         }
 
         /**
+         * Verifies whether all non-mime tiles have been clicked;
+         */
+        checkGameWon = () => {
+            if (this.tilesClicked === this.numberOfTiles - this.mimes) {
+                this.gameWon();
+            }
+        }
+
+        /**
+         * Shows the overlay and the popup window when all non-mime tiles are oncovered. Removes relevant
+         * event listeners and resets the timer;
+         */
+        gameWon = () => {            
+            gameOverOverlay.classList.toggle("game-won-overlay-closed");
+            
+            let minutes = parseInt(this.timeElapsed / 60, 10);
+            let seconds = this.timeElapsed % 60;
+            seconds = seconds < 10 ? "0" + seconds : seconds;
+
+            document.getElementById("final-time").textContent = minutes + ":" + seconds;
+            document.removeEventListener("mousedown", currentGame.handleMouseDown);
+            document.removeEventListener("mouseup", currentGame.handleMouseUp);
+            document.removeEventListener("click", this.handleTileClick);
+            document.removeEventListener("contextmenu", this.handleRightClick);
+            clearInterval(timer);
+            newGameButton.classList.add("new-game-button-won");            
+        }
+
+        /**
          * Resets the playing field, the timer and creates the necessary event listeners anew;
          */
         newGame = () => {
@@ -210,18 +239,12 @@
             document.addEventListener("click", currentGame.handleTileClick);
             document.addEventListener("contextmenu", currentGame.handleRightClick);
             timer = setInterval(currentGame.refreshTimeDisplay, 1000);
+
             if (newGameButton.classList.contains("new-game-button-lost")) {
                 newGameButton.classList.remove("new-game-button-lost");
             }
-        }
-
-        /**
-         * Verifies whether all non-mime tiles have been clicked;
-         */
-        checkGameWon = () => {
-            if (this.tilesClicked === this.numberOfTiles - this.mimes) {
-                this.gameOver();
-                //TO BE CHANGED
+            if (newGameButton.classList.contains("new-game-button-won")) {
+                newGameButton.classList.remove("new-game-button-won");
             }
         }
         
@@ -371,8 +394,8 @@
     /**
      * Setting global variables;
      */
-    let height = 10;
-    let width = 10;
+    let height = 100;
+    let width = 100;
     let mimes = 10;
     let currentGame = new PlayingField(height, width, mimes);
     let timer = setInterval(currentGame.refreshTimeDisplay, 1000);
@@ -380,6 +403,8 @@
     const easyButton = document.querySelector("#easy");
     const mediumButton = document.querySelector("#medium");
     const hardButton = document.querySelector("#hard");  
+    const overlayButton = document.querySelector("#overlay-button");
+    const gameOverOverlay = document.querySelector("#game-won");
 
     /**
      * Removes the event listeners in order for them not to overlap with the existing listeners, resets
@@ -401,7 +426,8 @@
     newGameButton.addEventListener("click", resetCurrentGame);
     easyButton.addEventListener("click", function() {height = 10; width = 10; mimes = 10; resetCurrentGame();});
     mediumButton.addEventListener("click", function() {height = 16; width = 16; mimes = 40; resetCurrentGame();});
-    hardButton.addEventListener("click", function() {height = 16; width = 30; mimes = 99; resetCurrentGame();});    
+    hardButton.addEventListener("click", function() {height = 16; width = 30; mimes = 99; resetCurrentGame();});
+    overlayButton.addEventListener("click", function() {gameOverOverlay.classList.toggle("game-won-overlay-closed");});    
     document.addEventListener("mousedown", currentGame.handleMouseDown);
     document.addEventListener("mouseup", currentGame.handleMouseUp);
     document.addEventListener("click", currentGame.handleTileClick);
