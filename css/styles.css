@@ -262,6 +262,7 @@ h1 {
           align-items: center;
   -ms-flex-pack: distribute;
       justify-content: space-around;
+  padding-top: 1rem;
 }
 
 .game-won-popup span {

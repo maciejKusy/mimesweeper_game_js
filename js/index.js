@@ -14,6 +14,9 @@
             this.timeElapsed = 0;
             this.minutes = document.getElementById("minutes");
             this.seconds = document.getElementById("seconds");
+            this.tileClickSound = new Audio("wav/tile_click.wav");
+            this.flagPlopSound = new Audio("wav/flag_plop.wav");
+            this.victoryJingle = new Audio("wav/victory.wav");
             this.createTileRows();
             this.createTileMap();
             this.createMimes();            
@@ -167,18 +170,6 @@
         }
         
         /**
-         * Handles mouseup event on the condition that it fires over a tile;
-         * @param {Event} mouseupEvent - the mouseup event captured by document;
-         */
-        handleTileClick = mouseupEvent => {
-            let clickedTile = mouseupEvent.target;
-
-            if (clickedTile.classList.contains("tile-unclicked")) {
-                this.revealTile(clickedTile);
-            }
-        }
-
-        /**
          * Reveals all mime tiles, stops the timer and blocks further revealing of tiles;
          */
         gameOver = () => {
@@ -201,6 +192,7 @@
          */
         checkGameWon = () => {
             if (this.tilesClicked === this.numberOfTiles - this.mimes) {
+                this.victoryJingle.play();
                 this.gameWon();
             }
         }
@@ -318,30 +310,6 @@
         }
 
         /**
-         * Handles setting up flags fired by a right click;
-         * @param {Event} rClickEvent - the event fired when right mouse button clicked;
-         */
-        handleRightClick = rClickEvent => {
-            let clickedTile = rClickEvent.target;
-
-            if (clickedTile.dataset.flagged === "false" && clickedTile.dataset.clicked === "false") {
-                if (this.flags > 0) {    
-                    rClickEvent.preventDefault();
-                    clickedTile.dataset.flagged = true;
-                    clickedTile.classList.add("tile-flagged");
-                    this.flags--;
-                    this.refreshFlagDisplay();
-                }
-            } else if (clickedTile.dataset.flagged === "true") {
-                rClickEvent.preventDefault();
-                clickedTile.dataset.flagged = false;
-                clickedTile.classList.remove("tile-flagged");
-                this.flags++;
-                this.refreshFlagDisplay();
-            }
-        }
-
-        /**
          * Refreshes the dislplay of flags left to keep the user informed on how many they got left;
          */
         refreshFlagDisplay = () => {
@@ -362,6 +330,45 @@
 
             this.minutes.textContent = minutes;
             this.seconds.textContent = seconds;
+        }
+
+        /**
+         * Handles mouseup event on the condition that it fires over a tile;
+         * @param {Event} mouseupEvent - the mouseup event captured by document;
+         */
+        handleTileClick = mouseupEvent => {
+            let clickedTile = mouseupEvent.target;
+
+            if (clickedTile.dataset.clicked === "false") {
+                this.tileClickSound.play();
+                this.revealTile(clickedTile);
+            }
+        }
+
+        /**
+         * Handles setting up flags fired by a right click;
+         * @param {Event} rClickEvent - the event fired when right mouse button clicked;
+         */
+        handleRightClick = rClickEvent => {
+            let clickedTile = rClickEvent.target;
+
+            if (clickedTile.dataset.flagged === "false" && clickedTile.dataset.clicked === "false") {
+                this.flagPlopSound.play();
+                if (this.flags > 0) {    
+                    rClickEvent.preventDefault();
+                    clickedTile.dataset.flagged = true;
+                    clickedTile.classList.add("tile-flagged");
+                    this.flags--;
+                    this.refreshFlagDisplay();
+                }
+            } else if (clickedTile.dataset.flagged === "true") {
+                this.flagPlopSound.play();
+                rClickEvent.preventDefault();
+                clickedTile.dataset.flagged = false;
+                clickedTile.classList.remove("tile-flagged");
+                this.flags++;
+                this.refreshFlagDisplay();
+            }
         }
 
         /**
