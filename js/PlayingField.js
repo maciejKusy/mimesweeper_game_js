@@ -3,8 +3,12 @@
  */
 export class PlayingField {
     constructor(height=9, width=9, numberOfMimes=10) {
-        this.height = height;
-        this.width = width;
+
+        if (height < 10) {this.height = 10;}
+        if (width < 10) {this.width = 10;}
+        if (height > 16) {this.height = 16;}
+        if (width > 30) {this.width = 30;}
+
         this.mimes = numberOfMimes;
         this.flags = numberOfMimes;
         this.tiles = new Map();
@@ -28,18 +32,116 @@ export class PlayingField {
         this.createMimes();            
         this.createMimeNeighbors();
         this.refreshFlagDisplay();
+
+        /**
+         * Adding event listeners for the first time - the five listeners below will not be removed
+         * at any point during the game;
+         */
+        this.newGameButton.addEventListener("click", this.handleNewGameButton);
+        this.easyButton.addEventListener("click", this.handleEasyButton);
+        this.mediumButton.addEventListener("click", this.handleMediumButton);
+        this.hardButton.addEventListener("click", this.handleHardButton);
+        this.overlayButton.addEventListener("click", this.handleOverlayButton);  
+
+        /**
+         * Adding the event listeners that will be removed every time the game ends (whether by victory or
+         * defeat);
+         */
+        document.addEventListener("mousedown", this.handleMouseDown);
+        document.addEventListener("mouseup", this.handleMouseUp);
+        document.addEventListener("click", this.handleTileClick);
+        document.addEventListener("contextmenu", this.handleRightClick);
     }        
+
+    /**
+     * Creating handler functions for main buttons;
+     */
+    handleNewGameButton = () => {
+        this.resetCurrentGame(this.height, this.width, this.mimes);
+    }
+    handleEasyButton = () => {
+        this.resetCurrentGame(10, 10, 10);
+    }
+    handleMediumButton = () => {
+        this.resetCurrentGame(16, 16, 40);
+    }
+    handleHardButton = () => {
+        this.resetCurrentGame(16, 30, 99);
+    }
+    handleOverlayButton = () => {
+        this.gameOverOverlay.classList.toggle("game-won-overlay-closed");    
+    }
+
+    /**
+     * Handles mouseup event on the condition that it fires over a tile;
+     * @param {Event} mouseupEvent - the mouseup event captured by document;
+     */
+    handleTileClick = mouseupEvent => {
+        let clickedTile = mouseupEvent.target;
+
+        if (clickedTile.dataset.clicked === "false") {
+            this.tileClickSound.play();
+            this.revealTile(clickedTile);
+        }
+    }
+
+    /**
+     * Handles setting up flags fired by a right click;
+     * @param {Event} rClickEvent - the event fired when right mouse button clicked;
+     */
+    handleRightClick = rClickEvent => {
+        let clickedTile = rClickEvent.target;
+
+        if (clickedTile.dataset.flagged === "false" && clickedTile.dataset.clicked === "false") {
+            this.flagPlopSound.play();
+            if (this.flags > 0) {    
+                rClickEvent.preventDefault();
+                clickedTile.dataset.flagged = true;
+                clickedTile.classList.add("tile-flagged");
+                this.flags--;
+                this.refreshFlagDisplay();
+            }
+        } else if (clickedTile.dataset.flagged === "true") {
+            this.flagPlopSound.play();
+            rClickEvent.preventDefault();
+            clickedTile.dataset.flagged = false;
+            clickedTile.classList.remove("tile-flagged");
+            this.flags++;
+            this.refreshFlagDisplay();
+        }
+    }
+
+    /**
+     * Handles the adjustment of newGameButton image when mouse down on an unclicked tile;
+     * @param {Event} mousedownEvent 
+     */
+    handleMouseDown = mousedownEvent => {
+        let clickedTile = mousedownEvent.target;
+
+        if (mousedownEvent.button === 0) {
+            if (clickedTile.dataset.clicked === "false") {
+                this.newGameButton.classList.toggle("new-game-button-tense");
+            }
+        }
+    }
+
+    /**
+     * Handles the adjustment of newGameButton image on mouseup;
+     * @param {Event} mouseupEvent 
+     */
+    handleMouseUp = mouseupEvent => {
+        if (mouseupEvent.button === 0) {
+            if (this.newGameButton.classList.contains("new-game-button-tense")) {
+                this.newGameButton.classList.remove("new-game-button-tense");
+            }
+        }
+    }
 
     /**
      * Creates rows of tiles and runs a function that fills each row with tiles;
      */
     createTileRows = () => {
-        let numberOfTiles = 0; 
-
-        if (this.height < 10) {this.height = 10;}
-        if (this.width < 10) {this.width = 10;}
-        if (this.height > 16) {this.height = 16;}
-        if (this.width > 30) {this.width = 30;}
+        let numberOfTiles = 0;        
         
         const tileContainer = document.getElementById("tile-container");
         tileContainer.innerHTML = '';
@@ -173,6 +275,22 @@ export class PlayingField {
                 this.tiles.get(tileNum).dataset.content = mimeNeighbors;
             }
         }
+    }
+
+    /**
+     * Resets the game by removing relevant event listeners, clearing the timer and running the newGame
+     * method to re-structure the playing field ald re-set key data;
+     * @param {number} height 
+     * @param {number} width 
+     * @param {number} mimes 
+     */
+    resetCurrentGame = (height, width, mimes) => {
+        document.removeEventListener("mousedown", this.handleMouseDown);
+        document.removeEventListener("mouseup", this.handleMouseUp);
+        document.removeEventListener("click", this.handleTileClick);
+        document.removeEventListener("contextmenu", this.handleRightClick);
+        clearInterval(this.timer);
+        this.newGame(height, width, mimes);
     }
     
     /**
@@ -350,70 +468,5 @@ export class PlayingField {
 
         this.minutes.textContent = minutes;
         this.seconds.textContent = seconds;
-    }
-
-    /**
-     * Handles mouseup event on the condition that it fires over a tile;
-     * @param {Event} mouseupEvent - the mouseup event captured by document;
-     */
-    handleTileClick = mouseupEvent => {
-        let clickedTile = mouseupEvent.target;
-
-        if (clickedTile.dataset.clicked === "false") {
-            this.tileClickSound.play();
-            this.revealTile(clickedTile);
-        }
-    }
-
-    /**
-     * Handles setting up flags fired by a right click;
-     * @param {Event} rClickEvent - the event fired when right mouse button clicked;
-     */
-    handleRightClick = rClickEvent => {
-        let clickedTile = rClickEvent.target;
-
-        if (clickedTile.dataset.flagged === "false" && clickedTile.dataset.clicked === "false") {
-            this.flagPlopSound.play();
-            if (this.flags > 0) {    
-                rClickEvent.preventDefault();
-                clickedTile.dataset.flagged = true;
-                clickedTile.classList.add("tile-flagged");
-                this.flags--;
-                this.refreshFlagDisplay();
-            }
-        } else if (clickedTile.dataset.flagged === "true") {
-            this.flagPlopSound.play();
-            rClickEvent.preventDefault();
-            clickedTile.dataset.flagged = false;
-            clickedTile.classList.remove("tile-flagged");
-            this.flags++;
-            this.refreshFlagDisplay();
-        }
-    }
-
-    /**
-     * Handles the adjustment of newGameButton image when mouse down on an unclicked tile;
-     * @param {Event} mousedownEvent 
-     */
-    handleMouseDown = mousedownEvent => {
-        let clickedTile = mousedownEvent.target;
-
-        if (mousedownEvent.button === 0) {
-            if (clickedTile.dataset.clicked === "false") {
-                this.newGameButton.classList.toggle("new-game-button-tense");
-            }
-        }
-    }
-
-    /**
-     * Handles the adjustment of newGameButton image on mouseup;
-     * @param {Event} mouseupEvent 
-     */
-    handleMouseUp = mouseupEvent => {
-        if (mouseupEvent.button === 0) {
-            if (this.newGameButton.classList.contains("new-game-button-tense")) {
-                this.newGameButton.classList.remove("new-game-button-tense");
-            }
-        }
-    }
+    }    
 } 

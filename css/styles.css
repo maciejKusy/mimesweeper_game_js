@@ -45,10 +45,6 @@ h1 {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
   -webkit-box-pack: justify;
       -ms-flex-pack: justify;
           justify-content: space-between;
@@ -276,7 +272,7 @@ h1 {
           flex-grow: 0;
 }
 
-.game-won-popup #final-time {
+.final-time {
   font-size: 2rem;
 }
 /*# sourceMappingURL=styles.css.map */
