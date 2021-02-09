@@ -1,3 +1,4 @@
+import {Tile} from './Tile.js';
 /**
  * The class encompassing all the logic behind tiles, buttons and displays visible on the screen;
  */
@@ -14,6 +15,7 @@ export class PlayingField {
         this.tiles = new Map();
         this.tilesClicked = 0;
         this.timeElapsed = 0;
+        this.numberOfTiles = 0;
         this.minutes = document.getElementById("minutes");
         this.seconds = document.getElementById("seconds");
         this.tileClickSound = new Audio("wav/tile_click.wav");
@@ -78,34 +80,39 @@ export class PlayingField {
      */
     handleTileClick = mouseupEvent => {
         let clickedTile = mouseupEvent.target;
+        if (clickedTile.classList.contains("tile-unclicked")) {
+            let tileObject = this.tiles.get(parseInt(clickedTile.id, 10));
 
-        if (clickedTile.dataset.clicked === "false") {
-            this.tileClickSound.play();
-            this.revealTile(clickedTile);
+            if (tileObject.clicked === false) {
+                this.tileClickSound.play();
+                this.revealTile(tileObject);
+            }
         }
-    }
+    }    
 
     /**
      * Handles setting up flags fired by a right click;
      * @param {Event} rClickEvent - the event fired when right mouse button clicked;
      */
     handleRightClick = rClickEvent => {
-        let clickedTile = rClickEvent.target;
+        let clickedTile = rClickEvent.target; 
+        
+        let tileObject = this.tiles.get(parseInt(clickedTile.id, 10));
 
-        if (clickedTile.dataset.flagged === "false" && clickedTile.dataset.clicked === "false") {
+        if (tileObject.flagged === false && tileObject.clicked === false) {
             this.flagPlopSound.play();
             if (this.flags > 0) {    
                 rClickEvent.preventDefault();
-                clickedTile.dataset.flagged = true;
-                clickedTile.classList.add("tile-flagged");
+                tileObject.flagged = true;
+                tileObject.avatar.classList.add("tile-flagged");
                 this.flags--;
                 this.refreshFlagDisplay();
             }
-        } else if (clickedTile.dataset.flagged === "true") {
+        } else if (tileObject.flagged === true) {
             this.flagPlopSound.play();
             rClickEvent.preventDefault();
-            clickedTile.dataset.flagged = false;
-            clickedTile.classList.remove("tile-flagged");
+            tileObject.flagged = false;
+            tileObject.avatar.classList.remove("tile-flagged");
             this.flags++;
             this.refreshFlagDisplay();
         }
@@ -118,9 +125,13 @@ export class PlayingField {
     handleMouseDown = mousedownEvent => {
         let clickedTile = mousedownEvent.target;
 
-        if (mousedownEvent.button === 0) {
-            if (clickedTile.dataset.clicked === "false") {
-                this.newGameButton.classList.toggle("new-game-button-tense");
+        if (clickedTile.classList.contains("tile-unclicked")) {
+            let tileObject = this.tiles.get(parseInt(clickedTile.id, 10));
+            
+            if (mousedownEvent.button === 0) {
+                if (tileObject.clicked === false) {
+                    this.newGameButton.classList.toggle("new-game-button-tense");
+                }
             }
         }
     }
@@ -140,9 +151,7 @@ export class PlayingField {
     /**
      * Creates rows of tiles and runs a function that fills each row with tiles;
      */
-    createTileRows = () => {
-        let numberOfTiles = 0;        
-        
+    createTileRows = () => { 
         const tileContainer = document.getElementById("tile-container");
         tileContainer.innerHTML = '';
 
@@ -152,10 +161,8 @@ export class PlayingField {
             tileContainer.appendChild(newRow);
 
             newRow.classList.add("tile-row"); 
-            this.createTiles(newRow, this.width);
-            numberOfTiles += this.width;          
-        }
-        this.numberOfTiles = numberOfTiles;
+            this.createTiles(newRow, this.width);                   
+        }        
     }
 
     /**
@@ -167,9 +174,10 @@ export class PlayingField {
         for (let width = 0; width < fieldWidth; width++) {
             let newTile = document.createElement("div");
             newTile.classList.add("tile-unclicked");
-            newTile.dataset.content = null;
-            newTile.dataset.clicked = false;
-            newTile.dataset.flagged = false;
+            this.numberOfTiles++;
+            
+            let currentOrderNum = this.numberOfTiles;
+            newTile.id = currentOrderNum;
 
             tileRow.appendChild(newTile);                
         }
@@ -183,8 +191,7 @@ export class PlayingField {
         const tileElements = document.getElementsByClassName("tile-unclicked");            
         
         for (let tileNum = 1; tileNum <= this.numberOfTiles; tileNum++) {
-            this.tiles.set(tileNum, tileElements[tileNum - 1]);
-            tileElements[tileNum - 1].dataset.ordernum = tileNum;           
+            this.tiles.set(tileNum, new Tile(tileElements[tileNum - 1], tileNum));                     
         }
     }
 
@@ -205,9 +212,9 @@ export class PlayingField {
             let selectedTile = this.tiles.get(randomIndex);                 
             
             if (selectedTile != undefined) {
-                if (selectedTile.dataset.content === "M") {continue;}
+                if (selectedTile.content === "M") {continue;}
                 else {
-                    selectedTile.dataset.content = "M";
+                    selectedTile.content = "M";
                     mimesLeft--;
                 }
             }
@@ -219,7 +226,7 @@ export class PlayingField {
      * @param {number} tileNum - order number of a tile within the tile map;
      */
     checkIfMimeByTileNum = tileNum => {
-        if (this.tiles.get(tileNum).dataset.content === "M") {return true;}
+        if (this.tiles.get(tileNum).content === "M") {return true;}
         return false;
     }
 
@@ -228,7 +235,7 @@ export class PlayingField {
      * @param {number} tileNum - order number of a tile within the tile map;
      */
     checkIfClickedByTileNum = tileNum => {
-        if (this.tiles.get(tileNum).dataset.clicked === "true") {return true;}
+        if (this.tiles.get(tileNum).clicked === true) {return true;}
         return false;
     }
 
@@ -272,7 +279,7 @@ export class PlayingField {
                 if (rightDown < this.numberOfTiles && rightDown % this.width != 1) {
                     if (this.checkIfMimeByTileNum(rightDown)) {mimeNeighbors++;}
                 }
-                this.tiles.get(tileNum).dataset.content = mimeNeighbors;
+                this.tiles.get(tileNum).content = mimeNeighbors;
             }
         }
     }
@@ -306,11 +313,12 @@ export class PlayingField {
         clearInterval(this.timer);
         this.newGameButton.classList.add("new-game-button-lost");
 
-        let mimeTiles = document.querySelectorAll('[data-content=M]');
-        mimeTiles.forEach(function(tile) {
-            tile.classList.add("tile-clicked");
-            tile.classList.add("tile-clicked-mime");
-        });
+        for (const [odrernum, tile] of this.tiles.entries()) {            
+            if (tile.content === "M") {
+                tile.avatar.classList.add("tile-clicked");
+                tile.avatar.classList.add("tile-clicked-mime");
+            }
+        }
     }
 
     /**
@@ -358,6 +366,7 @@ export class PlayingField {
         this.tiles = new Map();
         this.tilesClicked = 0;
         this.timeElapsed = 0;
+        this.numberOfTiles = 0;
         this.timer = setInterval(this.refreshTimeDisplay, 1000);
         this.createTileRows();
         this.createTileMap();
@@ -383,13 +392,13 @@ export class PlayingField {
      * @param {Node} tile - the tile the contents of which we want colored;
      */
     setColor = tile => {
-        let mimeNumber = parseInt(tile.dataset.content);
+        let mimeNumber = parseInt(tile.content);
         switch(true) {
-            case (mimeNumber === 1): tile.classList.add("one"); break;
-            case (mimeNumber === 2): tile.classList.add("two"); break;
-            case (mimeNumber === 3): tile.classList.add("three"); break;
-            case (mimeNumber === 4): tile.classList.add("four"); break;
-            case (mimeNumber >= 5): tile.classList.add("five-plus"); break;
+            case (mimeNumber === 1): tile.avatar.classList.add("one"); break;
+            case (mimeNumber === 2): tile.avatar.classList.add("two"); break;
+            case (mimeNumber === 3): tile.avatar.classList.add("three"); break;
+            case (mimeNumber === 4): tile.avatar.classList.add("four"); break;
+            case (mimeNumber >= 5): tile.avatar.classList.add("five-plus"); break;
         }
     }
 
@@ -398,49 +407,49 @@ export class PlayingField {
      * @param {Node} tile 
      */
     revealTile = tile => {
-        tile.dataset.clicked = true;
+        tile.clicked = true;
         this.tilesClicked++;
 
-        if (tile.dataset.flagged === "true") {
-            tile.classList.remove("tile-flagged");
+        if (tile.flagged === true) {
+            tile.avatar.classList.remove("tile-flagged");
             this.flags++;
             this.refreshFlagDisplay();
         }
 
-        if (tile.dataset.content === "M") {
+        if (tile.content === "M") {
             this.gameOver();
-        } else if (tile.dataset.content != "0") {
+        } else if (tile.content != 0) {
             this.checkGameWon();              
             this.setColor(tile);
-            tile.classList.add("tile-clicked");
-            tile.innerHTML = "<span>" + tile.dataset.content + "</span>";                
-        } else if (tile.dataset.content === "0") {
+            tile.avatar.classList.add("tile-clicked");
+            tile.avatar.innerHTML = tile.content;                
+        } else if (tile.content === 0) {
             this.checkGameWon();
-            tile.classList.add("tile-clicked");
+            tile.avatar.classList.add("tile-clicked");
 
-            let tileNum = parseInt(tile.dataset.ordernum, 10);
+            let tileNum = parseInt(tile.orderNumber, 10);
 
             let left = tileNum - 1;                
             if (left > 0 && left % this.width != 0) {
-                if (this.tiles.get(left).dataset.clicked === "false") {
+                if (this.tiles.get(left).clicked === false) {
                     this.revealTile(this.tiles.get(left));
                 }                        
             }
             let right = tileNum + 1;
             if (right <= this.numberOfTiles && right % this.width != 1) {
-                if (this.tiles.get(right).dataset.clicked === "false") {
+                if (this.tiles.get(right).clicked === false) {
                     this.revealTile(this.tiles.get(right));
                 }  
             }
             let up = tileNum - this.width;
             if (up > 0) {
-                if (this.tiles.get(up).dataset.clicked === "false") {
+                if (this.tiles.get(up).clicked === false) {
                     this.revealTile(this.tiles.get(up));
                 }  
             }
             let down = tileNum + this.width;
             if (down <= this.numberOfTiles) {
-                if (this.tiles.get(down).dataset.clicked === "false") {
+                if (this.tiles.get(down).clicked === false) {
                     this.revealTile(this.tiles.get(down));
                 }  
             }
