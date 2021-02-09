@@ -3,7 +3,9 @@ import {Tile} from './Tile.js';
  * The class encompassing all the logic behind tiles, buttons and displays visible on the screen;
  */
 export class PlayingField {
-    constructor(height=9, width=9, numberOfMimes=10) {
+    constructor(height=10, width=10, numberOfMimes=10) {
+        this.height = height;
+        this.width = width;
 
         if (height < 10) {this.height = 10;}
         if (width < 10) {this.width = 10;}
@@ -85,7 +87,7 @@ export class PlayingField {
 
             if (tileObject.clicked === false) {
                 this.tileClickSound.play();
-                this.revealTile(tileObject);
+                tileObject.revealTile(this);
             }
         }
     }    
@@ -174,6 +176,7 @@ export class PlayingField {
         for (let width = 0; width < fieldWidth; width++) {
             let newTile = document.createElement("div");
             newTile.classList.add("tile-unclicked");
+
             this.numberOfTiles++;
             
             let currentOrderNum = this.numberOfTiles;
@@ -400,60 +403,6 @@ export class PlayingField {
             case (mimeNumber === 4): tile.avatar.classList.add("four"); break;
             case (mimeNumber >= 5): tile.avatar.classList.add("five-plus"); break;
         }
-    }
-
-    /**
-     * Reveals the contents of the tile and based on them performs further functions on neighboring tiles;
-     * @param {Node} tile 
-     */
-    revealTile = tile => {
-        tile.clicked = true;
-        this.tilesClicked++;
-
-        if (tile.flagged === true) {
-            tile.avatar.classList.remove("tile-flagged");
-            this.flags++;
-            this.refreshFlagDisplay();
-        }
-
-        if (tile.content === "M") {
-            this.gameOver();
-        } else if (tile.content != 0) {
-            this.checkGameWon();              
-            this.setColor(tile);
-            tile.avatar.classList.add("tile-clicked");
-            tile.avatar.innerHTML = tile.content;                
-        } else if (tile.content === 0) {
-            this.checkGameWon();
-            tile.avatar.classList.add("tile-clicked");
-
-            let tileNum = parseInt(tile.orderNumber, 10);
-
-            let left = tileNum - 1;                
-            if (left > 0 && left % this.width != 0) {
-                if (this.tiles.get(left).clicked === false) {
-                    this.revealTile(this.tiles.get(left));
-                }                        
-            }
-            let right = tileNum + 1;
-            if (right <= this.numberOfTiles && right % this.width != 1) {
-                if (this.tiles.get(right).clicked === false) {
-                    this.revealTile(this.tiles.get(right));
-                }  
-            }
-            let up = tileNum - this.width;
-            if (up > 0) {
-                if (this.tiles.get(up).clicked === false) {
-                    this.revealTile(this.tiles.get(up));
-                }  
-            }
-            let down = tileNum + this.width;
-            if (down <= this.numberOfTiles) {
-                if (this.tiles.get(down).clicked === false) {
-                    this.revealTile(this.tiles.get(down));
-                }  
-            }
-        } 
     }
 
     /**
