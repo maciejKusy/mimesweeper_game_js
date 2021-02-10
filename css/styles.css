@@ -41,7 +41,7 @@ h1 {
   margin-top: 1.25rem;
 }
 
-.top-container {
+.main-container__top {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -56,7 +56,7 @@ h1 {
   width: 95%;
 }
 
-.display {
+.main-container__top__display {
   background-color: #0d0d0d;
   border: 3px inset #9b9b9b;
   color: #b30000;
@@ -69,7 +69,7 @@ h1 {
   width: 5rem;
 }
 
-.new-game-button {
+.main-container__top__new-game-button {
   background-color: #6d6d6d;
   border: 0.16rem outset #9b9b9b;
   background-position: center;
@@ -84,23 +84,23 @@ h1 {
   width: 3rem;
 }
 
-.new-game-button:active {
+.main-container__top__new-game-button:active {
   border-style: inset;
 }
 
-.new-game-button-tense {
+.main-container__top__new-game-button-tense {
   background-image: url("../img/tense.png");
 }
 
-.new-game-button-lost {
+.main-container__top__new-game-button-lost {
   background-image: url("../img/loser.png");
 }
 
-.new-game-button-won {
+.main-container__top__new-game-button-won {
   background-image: url("../img/victor.png");
 }
 
-.difficulty-button {
+.main-container__top__difficulty-button {
   background-color: #6d6d6d;
   border: 0.16rem outset #9b9b9b;
   border-width: 0.3rem;
@@ -119,15 +119,15 @@ h1 {
   width: 5rem;
 }
 
-.difficulty-button:active {
+.main-container__top__difficulty-button:active {
   border-style: inset;
 }
 
-.difficulty-button:hover {
+.main-container__top__difficulty-button:hover {
   color: #bbbfca;
 }
 
-.tile-container {
+.main-container__tile-container {
   background-color: #6d6d6d;
   border: 0.16rem outset #9b9b9b;
   display: -webkit-inline-box;
@@ -143,7 +143,7 @@ h1 {
   max-width: 60vw;
 }
 
-.tile-row {
+.main-container__tile-container__tile-row {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -156,7 +156,7 @@ h1 {
           flex-direction: row;
 }
 
-.tile-unclicked {
+.main-container__tile-container__tile-row__tile--unclicked {
   background-color: #6d6d6d;
   border: 0.16rem outset #9b9b9b;
   font-family: "Press Start 2P", arial;
@@ -170,17 +170,17 @@ h1 {
   padding-left: 0.1rem;
 }
 
-.tile-unclicked:hover {
+.main-container__tile-container__tile-row__tile--unclicked:hover {
   background-color: #9b9b9b;
 }
 
-.tile-clicked {
+.main-container__tile-container__tile-row__tile--clicked {
   background-color: #b9b9b9;
   border-style: inset;
   border-color: #b9b9b9;
 }
 
-.tile-clicked-mime {
+.main-container__tile-container__tile-row__tile--clicked--mime {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 70% 80%;
@@ -188,30 +188,30 @@ h1 {
   background-color: #b30000;
 }
 
-.tile-flagged {
+.main-container__tile-container__tile-row__tile--flagged {
   background-position: center;
   background-repeat: no-repeat;
   background-size: 70% 80%;
   background-image: url("../img/red_flag.png");
 }
 
-.one {
+.main-container__tile-container__tile-row__tile--one {
   color: #3399ff;
 }
 
-.two {
+.main-container__tile-container__tile-row__tile--two {
   color: #006600;
 }
 
-.three {
+.main-container__tile-container__tile-row__tile--three {
   color: #ff0000;
 }
 
-.four {
+.main-container__tile-container__tile-row__tile--four {
   color: #660033;
 }
 
-.five-plus {
+.main-container__tile-container__tile-row__tile--five-plus {
   color: #4d004d;
 }
 
@@ -237,7 +237,7 @@ h1 {
   display: none;
 }
 
-.game-won-popup {
+.game-won-overlay__game-won-popup {
   background-color: #6d6d6d;
   border: 0.16rem outset #9b9b9b;
   display: -webkit-box;
@@ -257,18 +257,18 @@ h1 {
   padding-top: 1rem;
 }
 
-.game-won-popup span {
+.game-won-overlay__game-won-popup span {
   color: #0c2c47;
   font-family: "Press Start 2P", arial;
 }
 
-.game-won-popup button {
+.game-won-overlay__game-won-popup button {
   -webkit-box-flex: 0;
       -ms-flex-positive: 0;
           flex-grow: 0;
 }
 
-.final-time {
+.game-won-overlay__game-won-popup__final-time {
   font-size: 2rem;
 }
 /*# sourceMappingURL=styles.css.map */

@@ -81,7 +81,7 @@ h1 {
     margin-top: 1.25rem;
 }
 
-.top-container {
+.main-container__top {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -90,7 +90,7 @@ h1 {
     width: 95%;
 }
 
-.display {
+.main-container__top__display {
     background-color: $appBlack;
     border: 3px inset $tileBorderColor;
     color: $mimeBackgroundColor;
@@ -103,7 +103,7 @@ h1 {
     width: 5rem;
 }
 
-.new-game-button {
+.main-container__top__new-game-button {
     @include main-theme;
     @include image-center;
     background-image: url($newGameButtonPicDefault);
@@ -127,7 +127,7 @@ h1 {
     }
 }
 
-.difficulty-button {
+.main-container__top__difficulty-button {
     @include main-theme;
     border-width: 0.3rem;
     cursor: pointer;
@@ -148,19 +148,19 @@ h1 {
     }
 }
 
-.tile-container {
+.main-container__tile-container {
     @include main-theme;
     @include inline-flex-column;
     max-width: 60vw;
 }
 
-.tile-row {
+.main-container__tile-container__tile-row {
     display: flex;
     align-items: center;
     flex-direction: row;
 }
 
-.tile-unclicked {
+.main-container__tile-container__tile-row__tile--unclicked {
     @include main-theme;
     font-family: $tileFont;
     height: 1.25rem;
@@ -175,40 +175,40 @@ h1 {
     }
 }
 
-.tile-clicked {
+.main-container__tile-container__tile-row__tile--clicked {
     background-color: $tileClickedColor;
     border-style: inset;
     border-color: $tileClickedColor;
 }
 
-.tile-clicked-mime {
+.main-container__tile-container__tile-row__tile--clicked--mime {
     @include image-center;
     background-image: url($mimeImage);
     background-color: $mimeBackgroundColor;
 }
 
-.tile-flagged {
+.main-container__tile-container__tile-row__tile--flagged {
     @include image-center;
     background-image: url($flagImage);    
 }
 
-.one {
+.main-container__tile-container__tile-row__tile--one {
     color: $fontColorOne;
 }
 
-.two {
+.main-container__tile-container__tile-row__tile--two {
     color: $fontColorTwo;
 }
 
-.three {
+.main-container__tile-container__tile-row__tile--three {
     color: $fontColorThree;
 }
 
-.four {
+.main-container__tile-container__tile-row__tile--four {
     color: $fontColorFour;
 }
 
-.five-plus {
+.main-container__tile-container__tile-row__tile--five-plus {
     color: $fontColorFivePlus
 }
 
@@ -227,7 +227,7 @@ h1 {
     }
 }
 
-.game-won-popup {
+.game-won-overlay__game-won-popup {
     @include main-theme;
     display: flex;
     height: 30vh;
@@ -245,6 +245,6 @@ h1 {
     }    
 }
 
-.final-time {
+.game-won-overlay__game-won-popup__final-time {
     font-size: 2rem;
 }

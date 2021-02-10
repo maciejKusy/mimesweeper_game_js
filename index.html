@@ -12,30 +12,30 @@
     <h1>Boro's Mimesweeper</h1>
     
     <div class="main-container">
-        <div class="top-container">
-            <button id="easy" class="difficulty-button" title="10x10 with 10 Mimes">Easy</button>
-            <button id="medium" class="difficulty-button" title="16x16 with 40 Mimes">Medium</button>
-            <button id="hard" class="difficulty-button" title="16x30 with 99 Mimes">Hard</button>
+        <div class="main-container__top">
+            <button id="easy" class="main-container__top__difficulty-button" title="10x10 with 10 Mimes">Easy</button>
+            <button id="medium" class="main-container__top__difficulty-button" title="16x16 with 40 Mimes">Medium</button>
+            <button id="hard" class="main-container__top__difficulty-button" title="16x30 with 99 Mimes">Hard</button>
         </div>
         <!--below contains the timer, the newgame button and the flag number display-->
-        <div class="top-container">
-            <div id="display-left" class="display"></div>
-            <button id="new-game" class="new-game-button"></button>
-            <div id="display-right" class="display">
-                <span id = "minutes">0</span>:<span id = "seconds">00</span>
+        <div class="main-container__top">
+            <div id="display-left" class="main-container__top__display"></div>
+            <button id="new-game" class="main-container__top__new-game-button"></button>
+            <div id="display-right" class="main-container__top__display">
+                <span id="minutes">0</span>:<span id="seconds">00</span>
             </div>
         </div>
 
         <!--below container is where the tiles will appear after the createTileRows function is run-->
-        <div id="tile-container" class="tile-container">
+        <div id="tile-container" class="main-container__tile-container">
         </div>
     </div>   
 
     <div id="game-won" class="game-won-overlay game-won-overlay-closed">
-        <div class="game-won-popup">
+        <div class="game-won-overlay__game-won-popup">
             <span>You won! Your time is:</span>
-            <span id="final-time" class="final-time"></span>
-            <button id="overlay-button" class="difficulty-button">OK</button>
+            <span id="final-time" class="game-won-overlay__game-won-popup__final-time"></span>
+            <button id="overlay-button" class="main-container__top__difficulty-button">OK</button>
         </div>
     </div>
 

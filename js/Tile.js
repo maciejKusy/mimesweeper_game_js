@@ -17,7 +17,7 @@ export class Tile {
         parent.tilesClicked++;
 
         if (this.flagged === true) {
-            this.avatar.classList.remove("tile-flagged");
+            this.avatar.classList.remove("main-container__tile-container__tile-row__tile--flagged");
             parent.flags++;
             parent.refreshFlagDisplay();
         }
@@ -27,11 +27,11 @@ export class Tile {
         } else if (this.content != 0) {
             parent.checkGameWon();              
             parent.setColor(this);
-            this.avatar.classList.add("tile-clicked");
+            this.avatar.classList.add("main-container__tile-container__tile-row__tile--clicked");
             this.avatar.innerHTML = this.content;                
         } else if (this.content === 0) {
             parent.checkGameWon();
-            this.avatar.classList.add("tile-clicked");
+            this.avatar.classList.add("main-container__tile-container__tile-row__tile--clicked");
 
             let tileNum = parseInt(this.orderNumber, 10);
 
