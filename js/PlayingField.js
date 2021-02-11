@@ -71,7 +71,7 @@ export class PlayingField {
         this.resetCurrentGame(16, 30, 99);
     }
     handleOverlayButton = () => {
-        this.gameOverOverlay.classList.toggle("game-won-overlay-closed");    
+        this.gameOverOverlay.classList.toggle("game-won-overlay--closed");    
     }
 
     /**
@@ -81,7 +81,7 @@ export class PlayingField {
     handleTileClick = clickEvent => {
         let clickedTile = clickEvent.target;
 
-        if (clickedTile.classList.contains("main-container__tile-container__tile-row__tile--unclicked")) {
+        if (clickedTile.classList.contains("tile--unclicked")) {
             let tileObject = this.tiles.get(parseInt(clickedTile.id, 10));
 
             if (tileObject.clicked === false) {
@@ -105,7 +105,7 @@ export class PlayingField {
             if (this.flags > 0) {    
                 rClickEvent.preventDefault();
                 tileObject.flagged = true;
-                tileObject.avatar.classList.add("main-container__tile-container__tile-row__tile--flagged");
+                tileObject.avatar.classList.add("tile--flagged");
                 this.flags--;
                 this.refreshFlagDisplay();
             }
@@ -113,7 +113,7 @@ export class PlayingField {
             this.flagPlopSound.play();
             rClickEvent.preventDefault();
             tileObject.flagged = false;
-            tileObject.avatar.classList.remove("main-container__tile-container__tile-row__tile--flagged");
+            tileObject.avatar.classList.remove("tile--flagged");
             this.flags++;
             this.refreshFlagDisplay();
         }
@@ -126,12 +126,12 @@ export class PlayingField {
     handleMouseDown = mousedownEvent => {
         let clickedTile = mousedownEvent.target;
 
-        if (clickedTile.classList.contains("main-container__tile-container__tile-row__tile--unclicked")) {
+        if (clickedTile.classList.contains("tile--unclicked")) {
             let tileObject = this.tiles.get(parseInt(clickedTile.id, 10));
             
             if (mousedownEvent.button === 0) {
                 if (tileObject.clicked === false) {
-                    this.newGameButton.classList.toggle("main-container__top__new-game-button-tense");
+                    this.newGameButton.classList.toggle("new-game-button--tense");
                 }
             }
         }
@@ -143,8 +143,8 @@ export class PlayingField {
      */
     handleMouseUp = mouseupEvent => {
         if (mouseupEvent.button === 0) {
-            if (this.newGameButton.classList.contains("main-container__top__new-game-button-tense")) {
-                this.newGameButton.classList.remove("main-container__top__new-game-button-tense");
+            if (this.newGameButton.classList.contains("new-game-button--tense")) {
+                this.newGameButton.classList.remove("new-game-button--tense");
             }
         }
     }
@@ -161,7 +161,7 @@ export class PlayingField {
             
             tileContainer.appendChild(newRow);
 
-            newRow.classList.add("main-container__tile-container__tile-row"); 
+            newRow.classList.add("tile-row"); 
             this.createTiles(newRow, this.width);                   
         }        
     }
@@ -174,7 +174,7 @@ export class PlayingField {
     createTiles = (tileRow, fieldWidth) => {
         for (let width = 0; width < fieldWidth; width++) {
             let newTile = document.createElement("div");
-            newTile.classList.add("main-container__tile-container__tile-row__tile--unclicked");
+            newTile.classList.add("tile--unclicked");
 
             this.numberOfTiles++;
             
@@ -190,7 +190,7 @@ export class PlayingField {
      * matrix effectively and without traversing indexes;
      */
     createTileMap = () => {
-        const tileElements = document.getElementsByClassName("main-container__tile-container__tile-row__tile--unclicked");            
+        const tileElements = document.getElementsByClassName("tile--unclicked");            
         
         for (let tileNum = 1; tileNum <= this.numberOfTiles; tileNum++) {
             this.tiles.set(tileNum, new Tile(tileElements[tileNum - 1], tileNum));                     
@@ -313,12 +313,12 @@ export class PlayingField {
         document.removeEventListener("click", this.handleTileClick);
         document.removeEventListener("contextmenu", this.handleRightClick);
         clearInterval(this.timer.interval);
-        this.newGameButton.classList.add("main-container__top__new-game-button-lost");
+        this.newGameButton.classList.add("new-game-button--lost");
 
         for (const [odrernum, tile] of this.tiles.entries()) {            
             if (tile.content === "M") {
-                tile.avatar.classList.add("main-container__tile-container__tile-row__tile--clicked");
-                tile.avatar.classList.add("main-container__tile-container__tile-row__tile--clicked--mime");
+                tile.avatar.classList.add("tile--clicked");
+                tile.avatar.classList.add("tile--mime");
             }
         }
     }
@@ -339,7 +339,7 @@ export class PlayingField {
     gameWon = () => {    
         this.victoryJingle.play();
 
-        this.gameOverOverlay.classList.toggle("game-won-overlay-closed");        
+        this.gameOverOverlay.classList.toggle("game-won-overlay--closed");        
 
         document.getElementById("final-time").textContent = this.timer.provideFinalTime();
         document.removeEventListener("mousedown", this.handleMouseDown);
@@ -347,7 +347,7 @@ export class PlayingField {
         document.removeEventListener("click", this.handleTileClick);
         document.removeEventListener("contextmenu", this.handleRightClick);
         clearInterval(this.timer.interval);
-        this.newGameButton.classList.add("main-container__top__new-game-button-won");            
+        this.newGameButton.classList.add("new-game-button--won");            
     }
 
     /**
@@ -376,11 +376,11 @@ export class PlayingField {
         document.addEventListener("click", this.handleTileClick);
         document.addEventListener("contextmenu", this.handleRightClick);
 
-        if (this.newGameButton.classList.contains("main-container__top__new-game-button-lost")) {
-            this.newGameButton.classList.remove("main-container__top__new-game-button-lost");
+        if (this.newGameButton.classList.contains("new-game-button--lost")) {
+            this.newGameButton.classList.remove("new-game-button--lost");
         }
-        if (this.newGameButton.classList.contains("main-container__top__new-game-button-won")) {
-            this.newGameButton.classList.remove("main-container__top__new-game-button-won");
+        if (this.newGameButton.classList.contains("new-game-button--won")) {
+            this.newGameButton.classList.remove("new-game-button--won");
         }
     }
     
@@ -391,11 +391,11 @@ export class PlayingField {
     setColor = tile => {
         let mimeNumber = parseInt(tile.content);
         switch(true) {
-            case (mimeNumber === 1): tile.avatar.classList.add("main-container__tile-container__tile-row__tile--one"); break;
-            case (mimeNumber === 2): tile.avatar.classList.add("main-container__tile-container__tile-row__tile--two"); break;
-            case (mimeNumber === 3): tile.avatar.classList.add("main-container__tile-container__tile-row__tile--three"); break;
-            case (mimeNumber === 4): tile.avatar.classList.add("main-container__tile-container__tile-row__tile--four"); break;
-            case (mimeNumber >= 5): tile.avatar.classList.add("main-container__tile-container__tile-row__tile--five-plus"); break;
+            case (mimeNumber === 1): tile.avatar.classList.add("tile--one"); break;
+            case (mimeNumber === 2): tile.avatar.classList.add("tile--two"); break;
+            case (mimeNumber === 3): tile.avatar.classList.add("tile--three"); break;
+            case (mimeNumber === 4): tile.avatar.classList.add("tile--four"); break;
+            case (mimeNumber >= 5): tile.avatar.classList.add("tile--five-plus"); break;
         }
     }
 

@@ -81,7 +81,7 @@ h1 {
     margin-top: 1.25rem;
 }
 
-.main-container__top {
+.top-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -90,7 +90,7 @@ h1 {
     width: 95%;
 }
 
-.main-container__top__display {
+.top-container__display {
     background-color: $appBlack;
     border: 3px inset $tileBorderColor;
     color: $mimeBackgroundColor;
@@ -103,7 +103,7 @@ h1 {
     width: 5rem;
 }
 
-.main-container__top__new-game-button {
+.new-game-button {
     @include main-theme;
     @include image-center;
     background-image: url($newGameButtonPicDefault);
@@ -116,18 +116,18 @@ h1 {
     &:active {
         border-style: inset;
     }
-    &-tense {
+    &--tense {
         background-image: url($newGameButtonPicTense);
     }
-    &-lost {
+    &--lost {
         background-image: url($newGameButtonPicLost);
     }
-    &-won {
+    &--won {
         background-image: url($newGameButtonPicWon);
     }
 }
 
-.main-container__top__difficulty-button {
+.difficulty-button {
     @include main-theme;
     border-width: 0.3rem;
     cursor: pointer;
@@ -148,68 +148,62 @@ h1 {
     }
 }
 
-.main-container__tile-container {
+.tile-container {
     @include main-theme;
     @include inline-flex-column;
     max-width: 60vw;
 }
 
-.main-container__tile-container__tile-row {
+.tile-row {
     display: flex;
     align-items: center;
     flex-direction: row;
 }
 
-.main-container__tile-container__tile-row__tile--unclicked {
-    @include main-theme;
-    font-family: $tileFont;
-    height: 1.25rem;
-    text-align: center;
-    transition: background-color 0.25s ease-out;
-    width: 1.25rem;
-    line-height: 1.25;
-    padding-top: 0.1rem; 
-    padding-left: 0.1rem;     
-    &:hover{
-        background-color: $tileBorderColor;
+.tile {    
+    &--unclicked {
+        @include main-theme;
+        font-family: $tileFont;
+        height: 1.25rem;
+        text-align: center;
+        transition: background-color 0.25s ease-out;
+        width: 1.25rem;
+        line-height: 1.25;
+        padding-top: 0.1rem; 
+        padding-left: 0.1rem; 
+        &:hover{
+            background-color: $tileBorderColor;
+        }
     }
-}
-
-.main-container__tile-container__tile-row__tile--clicked {
-    background-color: $tileClickedColor;
-    border-style: inset;
-    border-color: $tileClickedColor;
-}
-
-.main-container__tile-container__tile-row__tile--clicked--mime {
-    @include image-center;
-    background-image: url($mimeImage);
-    background-color: $mimeBackgroundColor;
-}
-
-.main-container__tile-container__tile-row__tile--flagged {
-    @include image-center;
-    background-image: url($flagImage);    
-}
-
-.main-container__tile-container__tile-row__tile--one {
-    color: $fontColorOne;
-}
-
-.main-container__tile-container__tile-row__tile--two {
-    color: $fontColorTwo;
-}
-
-.main-container__tile-container__tile-row__tile--three {
-    color: $fontColorThree;
-}
-
-.main-container__tile-container__tile-row__tile--four {
-    color: $fontColorFour;
-}
-
-.main-container__tile-container__tile-row__tile--five-plus {
-    color: $fontColorFivePlus
+    &--clicked {
+        background-color: $tileClickedColor;
+        border-style: inset;
+        border-color: $tileClickedColor;
+    }
+    &--mime {
+        @include image-center;
+        background-image: url($mimeImage);
+        background-color: $mimeBackgroundColor;
+    }
+    &--flagged {
+        @include image-center;
+        background-image: url($flagImage);
+    }
+    &--one {
+        color: $fontColorOne;
+    }
+    &--two {
+        color: $fontColorTwo;
+    }
+    &--three {
+        color: $fontColorThree;
+    }
+    &--four {
+        color: $fontColorFour;
+    }
+    &--five-plus {
+        color: $fontColorFivePlus;
+    }
 }
 
 .game-won-overlay {
@@ -222,12 +216,12 @@ h1 {
     left: 0;
     align-items: center;
     justify-content: center;
-    &-closed {
+    &--closed {
         display: none;
     }
 }
 
-.game-won-overlay__game-won-popup {
+.game-won-popup {
     @include main-theme;
     display: flex;
     height: 30vh;
@@ -245,6 +239,6 @@ h1 {
     }    
 }
 
-.game-won-overlay__game-won-popup__final-time {
+.game-won-popup__final-time {
     font-size: 2rem;
 }

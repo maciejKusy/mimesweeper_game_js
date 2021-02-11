@@ -5,6 +5,6 @@ import {PlayingField} from './PlayingField.js';
      * Creating an instance of the main class to create a graphical representation of the playing field and 
      * the logic behind it;
      */     
-    let game = new PlayingField(10, 10, 10);
+    let game = new PlayingField(100, 100, 10);
     
 })();
