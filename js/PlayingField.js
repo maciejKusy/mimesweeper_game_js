@@ -34,26 +34,43 @@ export class PlayingField {
         this.createMimes();            
         this.createMimeNeighbors();
         this.refreshFlagDisplay();
-
-        /**
-         * Adding event listeners for the first time - the five listeners below will not be removed
-         * at any point during the game;
-         */
+        this.createStaticListeners();
+        this.createDynamicListeners();
+    }
+    
+    /**
+     * Adding event listeners for the first time - the five listeners below will not be removed
+     * at any point during the game;
+     */
+    createStaticListeners = () => {
         this.newGameButton.addEventListener("click", this.handleNewGameButton);
         this.easyButton.addEventListener("click", this.handleEasyButton);
         this.mediumButton.addEventListener("click", this.handleMediumButton);
         this.hardButton.addEventListener("click", this.handleHardButton);
         this.overlayButton.addEventListener("click", this.handleOverlayButton);  
+    }
 
-        /**
-         * Adding the event listeners that will be removed every time the game ends (whether by victory or
-         * defeat);
-         */
+    /**
+     * Adding the event listeners that will be removed every time the game ends (whether by victory or
+     * defeat);
+     */
+    createDynamicListeners = () => {
         document.addEventListener("mousedown", this.handleMouseDown);
         document.addEventListener("mouseup", this.handleMouseUp);
         document.addEventListener("click", this.handleTileClick);
         document.addEventListener("contextmenu", this.handleRightClick);
-    }        
+    }
+
+    /**
+     * Removing the event listeners as the game ends (whether by victory or
+     * defeat);
+     */
+    removeDynamicListeners = () => {
+        document.removeEventListener("mousedown", this.handleMouseDown);
+        document.removeEventListener("mouseup", this.handleMouseUp);
+        document.removeEventListener("click", this.handleTileClick);
+        document.removeEventListener("contextmenu", this.handleRightClick);
+    }
 
     /**
      * Creating handler functions for main buttons;
@@ -86,7 +103,7 @@ export class PlayingField {
 
             if (tileObject.clicked === false) {
                 this.tileClickSound.play();
-                tileObject.revealTile(this);
+                this.revealTile(tileObject);
             }
         }
     }    
@@ -286,6 +303,61 @@ export class PlayingField {
         }
     }
 
+
+    /**
+     * Reveals the contents of the tile and based on them performs further functions on neighboring tiles;
+     * @param {Node} tile - the logical representation of the tile that is clicked;
+     */
+    revealTile = tile => {
+        tile.clicked = true;
+        this.tilesClicked++;
+
+        if (tile.flagged === true) {
+            tile.avatar.classList.remove("tile--flagged");
+            this.flags++;
+            this.refreshFlagDisplay();
+        }
+
+        if (tile.content === "M") {
+            this.gameOver();
+        } else if (tile.content != 0) {
+            this.checkGameWon();              
+            this.setColor(tile);
+            tile.avatar.classList.add("tile--clicked");
+            tile.avatar.innerHTML = tile.content;                
+        } else if (tile.content === 0) {
+            this.checkGameWon();
+            tile.avatar.classList.add("tile--clicked");
+
+            let tileNum = parseInt(tile.orderNumber, 10);
+
+            let left = tileNum - 1;                
+            if (left > 0 && left % this.width != 0) {
+                if (this.tiles.get(left).clicked === false) {
+                    this.revealTile(this.tiles.get(left));
+                }                        
+            }
+            let right = tileNum + 1;
+            if (right <= this.numberOfTiles && right % this.width != 1) {
+                if (this.tiles.get(right).clicked === false) {
+                    this.revealTile(this.tiles.get(right));
+                }  
+            }
+            let up = tileNum - this.width;
+            if (up > 0) {
+                if (this.tiles.get(up).clicked === false) {
+                    this.revealTile(this.tiles.get(up));
+                }  
+            }
+            let down = tileNum + this.width;
+            if (down <= this.numberOfTiles) {
+                if (this.tiles.get(down).clicked === false) {
+                    this.revealTile(this.tiles.get(down));
+                }  
+            }
+        } 
+    }
+
     /**
      * Resets the game by removing relevant event listeners, clearing the timer and running the newGame
      * method to re-structure the playing field ald re-set key data;
@@ -294,10 +366,7 @@ export class PlayingField {
      * @param {number} mimes 
      */
     resetCurrentGame = (height, width, mimes) => {
-        document.removeEventListener("mousedown", this.handleMouseDown);
-        document.removeEventListener("mouseup", this.handleMouseUp);
-        document.removeEventListener("click", this.handleTileClick);
-        document.removeEventListener("contextmenu", this.handleRightClick);
+        this.removeDynamicListeners();
         clearInterval(this.timer.interval);
         this.newGame(height, width, mimes);
     }
@@ -308,10 +377,7 @@ export class PlayingField {
     gameOver = () => {
         this.defeatJingle.play();
 
-        document.removeEventListener("mousedown", this.handleMouseDown);
-        document.removeEventListener("mouseup", this.handleMouseUp);
-        document.removeEventListener("click", this.handleTileClick);
-        document.removeEventListener("contextmenu", this.handleRightClick);
+        this.removeDynamicListeners();
         clearInterval(this.timer.interval);
         this.newGameButton.classList.add("new-game-button--lost");
 
@@ -342,10 +408,7 @@ export class PlayingField {
         this.gameOverOverlay.classList.toggle("game-won-overlay--closed");        
 
         document.getElementById("final-time").textContent = this.timer.provideFinalTime();
-        document.removeEventListener("mousedown", this.handleMouseDown);
-        document.removeEventListener("mouseup", this.handleMouseUp);
-        document.removeEventListener("click", this.handleTileClick);
-        document.removeEventListener("contextmenu", this.handleRightClick);
+        this.removeDynamicListeners();
         clearInterval(this.timer.interval);
         this.newGameButton.classList.add("new-game-button--won");            
     }
@@ -371,10 +434,7 @@ export class PlayingField {
         this.createMimeNeighbors();
         this.refreshFlagDisplay();
         
-        document.addEventListener("mousedown", this.handleMouseDown);
-        document.addEventListener("mouseup", this.handleMouseUp);
-        document.addEventListener("click", this.handleTileClick);
-        document.addEventListener("contextmenu", this.handleRightClick);
+        this.createDynamicListeners();
 
         if (this.newGameButton.classList.contains("new-game-button--lost")) {
             this.newGameButton.classList.remove("new-game-button--lost");

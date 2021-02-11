@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="A small, online Minesweeper clone with a whimsical twist. Created by Maciej Kusy, 2021.">
     <title>Mimesweeper</title>
+    <link rel="icon" type="image/png" href="img/mime_face.png">
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="prefetch" href="js/index.js">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Major+Mono+Display&family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
@@ -20,7 +23,7 @@
         <!--below contains the timer, the newgame button and the flag number display-->
         <div class="top-container">
             <div id="display-left" class="top-container__display"></div>
-            <button id="new-game" class="new-game-button"></button>
+            <button id="new-game" class="new-game-button" aria-label="New Game Button"></button>
             <div id="display-right" class="top-container__display">
                 <span id="minutes">0</span>:<span id="seconds">00</span>
             </div>
